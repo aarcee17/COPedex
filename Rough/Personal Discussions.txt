@@ -1,0 +1,7 @@
+1) Bollinger Bands-yf
+2) Top 4 News
+3) Turnover, Sharpe, 
+4) Add advantages of post over get and vice versa
+5) Fix security
+6) For the cherry, we'll add option for Dark Mode or set of themes
+7) Does any of the charting library show the plot background beforehand with no data?
