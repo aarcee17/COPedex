@@ -57,7 +57,7 @@ def login():
 @app.route('/dashboard')
 def dashboard():
     if 'user_id' in session:
-        return render_template('welcome.html', username=session['username'])
+        return render_template('home.html', username=session['username'])
     else:
         return redirect(url_for('index'))
 
