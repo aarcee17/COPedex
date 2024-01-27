@@ -3,21 +3,45 @@
 <head>
     <title>Welcome</title>
     <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='style.css') }}">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Honk&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Sixtyfour&display=swap" rel="stylesheet">
 </head>
 <body>
+    <div class="header">
+        <ul>
+            <li><img src={{url_for('static', filename='logo.svg')}}></li>
+            <li class="company">StockDex</li>
+            <li style="float:right" class="profile">Welcome, {{username}}<img src={{url_for('static', filename='user.svg')}}></li>
+        </ul>
+    </div>
     <main>
-        <div class="header">
-
-        </div>
+        <img class="image-divider" src="https://s3-us-west-2.amazonaws.com/s.cdpn.io/101448/wedding-divider-png-9.png" />
         <div class="indexArea">
+            <h2>Index</h2>
+            <hr class="solid">
+            <div class="boxes">
+                <div class="box">
 
+                </div>
+                <div class="box">
+                </div>
+                <div class="box">
+                </div>
+                <div class="box">
+                </div>
+            </div>
         </div>
+        
         <div class="toolArea">
 
         </div>
         <div class="newsAndLetter">
 
         </div>
-</main>
+    </main>
 </body>
 </html>
