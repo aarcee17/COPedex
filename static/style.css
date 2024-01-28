@@ -226,3 +226,13 @@ hr.solid {
 #result {
     margin-top: 6px;
 }
+
+.indexArea .box h1 {
+    margin-top: 0;
+    font-family: 'Pixelify Sans', sans-serif;
+}
+
+.indexArea .box h3 {
+    margin-top: 0;
+    font-family: 'VT323', monospace;
+}

@@ -10,7 +10,6 @@ def get_stock_dataN(symbol):
     response = requests.get(url)
     
     soup = BeautifulSoup(response.content, 'html.parser')
- 
     stock_name = soup.find('div', class_='zzDege').text
     stock_price = soup.find('div', class_='YMlKec fxKbKc').text
     #proloss = soup.find('div', class_='P2Luy Ebnabc ZYVHBb').text
@@ -55,7 +54,6 @@ app.secret_key = 'your_secret_key'  # Replace with your actual secret key
 app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///users.db'
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 db = SQLAlchemy(app)
-arr = ["a", "b", "c", "d"]
 # User Model
 class User(db.Model):
     id = db.Column(db.Integer, primary_key=True)
@@ -105,8 +103,8 @@ def dashboard():
     if 'user_id' in session:
         nifty = get_stock_dataN('NIFTY_50')
         sensex =  get_stock_dataB('SENSEX')
-        sbi = get_stock_dataNB('SBIN')
-        hdfc = get_stock_dataNB('HDFCBANK')
+        sbi = get_stock_dataN('NIFTY_BANK')
+        hdfc = get_stock_dataN('NIFTY_IT')
         data = [nifty,sensex,sbi,hdfc]
         return render_template('home.html', username=session['username'],data = data)
     

@@ -10,6 +10,8 @@
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300&display=swap" rel="stylesheet">
     <link href="https://fonts.googleapis.com/css2?family=Sixtyfour&display=swap" rel="stylesheet">
     <link href="https://fonts.googleapis.com/css2?family=Roboto+Mono:wght@300&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Pixelify+Sans&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=VT323&display=swap" rel="stylesheet">
 </head>
 <body>
     <div class="header">
@@ -25,25 +27,19 @@
             <h2>Index</h2>
             <hr class="solid">
             <div class="boxes">
-                <div class="box">
-                    {% for row in data %}
+                {% for row in data %}
                     <div class="box">
                         {% for item in row %}
-                            <span>{{ item }}</span>
+                            {% if loop.index == 1 %}
+                                <h1>{{ item }}</h1>
+                            {% elif loop.index in [2, 3] %}
+                                <h3>{{ item }}</h3>
+                            {% else %}
+                                <!-- Handle additional heading levels as needed -->
+                            {% endif %}
                         {% endfor %}
                     </div>
                 {% endfor %}
-                </div>
-                <div class="box">
-
-                </div>
-                <div class="box">
-
-                </div>
-
-                <div class="box">
-
-                </div>
             </div>
         </div>
         <div class="toolArea">
