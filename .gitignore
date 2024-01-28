@@ -7,3 +7,4 @@ pyvenv.cfg
 .DS_Store
 instance
 testOnly.py
+gfinance.py
