@@ -26,7 +26,13 @@
             <hr class="solid">
             <div class="boxes">
                 <div class="box">
-
+                    {% for row in data %}
+                    <div class="box">
+                        {% for item in row %}
+                            <span>{{ item }}</span>
+                        {% endfor %}
+                    </div>
+                {% endfor %}
                 </div>
                 <div class="box">
 

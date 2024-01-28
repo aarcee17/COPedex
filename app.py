@@ -1,7 +1,51 @@
 from flask import Flask, render_template, request, redirect, url_for, flash, session, jsonify
 from flask_sqlalchemy import SQLAlchemy
 from werkzeug.security import generate_password_hash, check_password_hash
-from flask_mail import Mail, Message
+import requests
+from bs4 import BeautifulSoup
+##################fetching data from Gfinance
+
+def get_stock_dataN(symbol):
+    url = f"https://www.google.com/finance/quote/{symbol}:INDEXNSE"
+    response = requests.get(url)
+    
+    soup = BeautifulSoup(response.content, 'html.parser')
+ 
+    stock_name = soup.find('div', class_='zzDege').text
+    stock_price = soup.find('div', class_='YMlKec fxKbKc').text
+    #proloss = soup.find('div', class_='P2Luy Ebnabc ZYVHBb').text
+    #stock_profit = soup.find('div', class_='').text
+    
+    return [stock_name,stock_price,symbol]
+  
+def get_stock_dataNB(symbol):
+    url = f"https://www.google.com/finance/quote/{symbol}:NSE"
+    response = requests.get(url)
+    
+    soup = BeautifulSoup(response.content, 'html.parser')
+ 
+    stock_name = soup.find('div', class_='zzDege').text
+    stock_price = soup.find('div', class_='YMlKec fxKbKc').text
+    #proloss = soup.find('div', class_='P2Luy Ebnabc ZYVHBb').text
+    #stock_profit = soup.find('div', class_='').text
+    
+    return [stock_name,stock_price,symbol]
+
+def get_stock_dataB(symbol):
+    url = f"https://www.google.com/finance/quote/{symbol}:INDEXBOM"
+    response = requests.get(url)
+    
+    soup = BeautifulSoup(response.content, 'html.parser')
+ 
+    stock_name = soup.find('div', class_='zzDege').text
+    stock_price = soup.find('div', class_='YMlKec fxKbKc').text
+    #proloss = soup.find('div', class_='P2Luy Ebnabc ZYVHBb').text
+    #stock_profit = soup.find('div', class_='JwB6zf').text
+    #print(f"{stock_name} ({symbol}): {stock_price}")    
+    return [stock_name,stock_price,symbol]
+ 
+
+#####################end of data fetch functionfrom flask_mail import Mail, Message
 import smtplib
 
 app = Flask(__name__)
@@ -59,7 +103,13 @@ def login():
 @app.route('/dashboard')
 def dashboard():
     if 'user_id' in session:
-        return render_template('home.html', username=session['username'])
+        nifty = get_stock_dataN('NIFTY_50')
+        sensex =  get_stock_dataB('SENSEX')
+        sbi = get_stock_dataNB('SBIN')
+        hdfc = get_stock_dataNB('HDFCBANK')
+        data = [nifty,sensex,sbi,hdfc]
+        return render_template('home.html', username=session['username'],data = data)
+    
     else:
         return redirect(url_for('index'))
 
