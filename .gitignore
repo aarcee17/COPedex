@@ -6,4 +6,5 @@ __pycache__
 pyvenv.cfg
 .DS_Store
 instance
+gfinance.py
 testOnly.py

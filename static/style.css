@@ -82,6 +82,7 @@ main{
     width: 100vw;
     display: block;
     position: absolute;
+    margin-left: 6vw;
 }
 
 .image-divider {
@@ -89,7 +90,7 @@ main{
     height: 4vh;
     margin-left: auto;
     margin-right: auto;
-    width:  100vw;
+    width:  94vw;
 }
 
 .header li {
@@ -113,8 +114,11 @@ main{
     font-size: 2em;
 }
 
-.indexArea {
-    margin-left: 6vw;
+.indexArea h2 {
+    font-family: 'Sixtyfour', sans-serif;
+}
+
+.toolArea h2 {
     font-family: 'Sixtyfour', sans-serif;
 }
 
@@ -131,8 +135,7 @@ main{
     background-color: #f2f2f2;
     border-radius: 10px;
     box-shadow: 0 0 20px rgba(0, 0, 0, 0.1);
-    text-align: center;
-    padding: 5px;
+    padding: 15px;
     margin-left: -5.6vw;
 }
 
@@ -141,4 +144,23 @@ hr.solid {
     border-top: 3px solid #bbb;
     width: 30%;
     margin-left: 2vw;
+}
+
+.toolArea .box{
+    text-align: center;
+    height: 14vh;
+}
+
+.toolArea .box p {
+    font-family: 'Roboto Mono', monospace;
+    margin-top: -1vh;
+    font-size: 0.9em;
+}
+
+.toolArea h1 {
+    margin-top: 1.2vh;
+}
+
+.toolArea .box {
+    cursor: pointer;
 }
