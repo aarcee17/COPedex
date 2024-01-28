@@ -9,6 +9,7 @@
     <link href="https://fonts.googleapis.com/css2?family=Montserrat&display=swap" rel="stylesheet">
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300&display=swap" rel="stylesheet">
     <link href="https://fonts.googleapis.com/css2?family=Sixtyfour&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Roboto+Mono:wght@300&display=swap" rel="stylesheet">
 </head>
 <body>
     <div class="header">
@@ -19,9 +20,7 @@
         </ul>
     </div>
     <main>
-        <div class="header">
-
-        </div>
+        <img class="image-divider" src="https://s3-us-west-2.amazonaws.com/s.cdpn.io/101448/wedding-divider-png-9.png" />
         <div class="indexArea">
             <h2>Index</h2>
             <hr class="solid">
@@ -30,20 +29,43 @@
 
                 </div>
                 <div class="box">
+
                 </div>
                 <div class="box">
+
                 </div>
+
                 <div class="box">
+
                 </div>
             </div>
         </div>
-        
         <div class="toolArea">
-
+            <h2>Features</h2>
+            <hr class="solid">
+            <div class="boxes">
+                <div class="box" onclick="redirectToIndividual()">
+                    <h1>Stats</h1>
+                    <p>View single stocks and their data</p>
+                </div>
+                <div class="box">
+                    <h1>Arena</h1>
+                    <p>Compare stocks at a glance</p>
+                </div>
+                <div class="box">
+                    <h1>Oak's Lab</h1>
+                    <p>Filter out the right stock for you</p>
+                </div>
+            </div>
         </div>
         <div class="newsAndLetter">
 
         </div>
     </main>
+    <script>
+        function redirectToIndividual() {
+            window.location.href = '/stats';
+        }
+    </script>
 </body>
 </html>

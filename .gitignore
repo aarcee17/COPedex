@@ -6,3 +6,4 @@ __pycache__
 pyvenv.cfg
 .DS_Store
 instance
+testOnly.py

@@ -9,7 +9,7 @@ app.secret_key = 'your_secret_key'  # Replace with your actual secret key
 app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///users.db'
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 db = SQLAlchemy(app)
-
+arr = ["a", "b", "c", "d"]
 # User Model
 class User(db.Model):
     id = db.Column(db.Integer, primary_key=True)
@@ -66,6 +66,13 @@ def logout():
     session.pop('user_id', None)
     session.pop('username', None)
     return redirect(url_for('index'))
+
+@app.route('/stats')
+def stockDashboard():
+    if 'user_id' in session:
+        return render_template('stockDashboard.html')
+    else:
+        return redirect(url_for('index'))
 
 if __name__ == '__main__':
     app.run(debug=True)
