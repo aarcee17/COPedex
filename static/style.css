@@ -70,5 +70,75 @@ button {
     background-color: #c82333;
 }
 
+.header {
+    position: fixed;
+    width: 100%;
+    top: 0;
+    height: 60px;
+}
 
+main{
+    height: 100vh;
+    width: 100vw;
+    display: block;
+    position: absolute;
+}
 
+.image-divider {
+    margin-top: 6vh;
+    height: 4vh;
+    margin-left: auto;
+    margin-right: auto;
+    width:  100vw;
+}
+
+.header li {
+    display: inline;
+}
+
+.header img {
+    height: 35px;
+    width: 35px;
+    border-radius: 50%;
+    margin-right: 10px;
+}
+
+.company{
+    font-family: 'Honk', system-ui;
+    font-size: 2.2em;
+}
+
+.profile {
+    font-family: 'Montserrat', sans-serif;
+    font-size: 2em;
+}
+
+.indexArea {
+    margin-left: 6vw;
+    font-family: 'Sixtyfour', sans-serif;
+}
+
+.boxes {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-around;
+    margin-top: 3.5vh;
+}
+
+.box {
+    width: 18vw;
+    height: 15vh;
+    background-color: #f2f2f2;
+    border-radius: 10px;
+    box-shadow: 0 0 20px rgba(0, 0, 0, 0.1);
+    text-align: center;
+    padding: 5px;
+    margin-left: -5.6vw;
+}
+
+hr.solid {
+    margin-top: -1.5vh;
+    border-top: 3px solid #bbb;
+    width: 30%;
+    margin-left: 2vw;
+}
