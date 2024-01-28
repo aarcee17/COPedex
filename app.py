@@ -1,6 +1,8 @@
-from flask import Flask, render_template, request, redirect, url_for, flash, session
+from flask import Flask, render_template, request, redirect, url_for, flash, session, jsonify
 from flask_sqlalchemy import SQLAlchemy
 from werkzeug.security import generate_password_hash, check_password_hash
+from flask_mail import Mail, Message
+import smtplib
 
 app = Flask(__name__)
 app.secret_key = 'your_secret_key'  # Replace with your actual secret key
@@ -73,6 +75,23 @@ def stockDashboard():
         return render_template('stockDashboard.html')
     else:
         return redirect(url_for('index'))
+
+@app.route('/compare')
+def compareDashboard():
+    if 'user_id' in session:
+        return render_template('compareDashboard.html')
+    else:
+        return redirect(url_for('index'))
+
+@app.route('/sendMail', methods=['POST'])
+def send_mail():
+    email = request.form.get('email')
+
+    response_message = 'Thanks for subscribing!'
+
+    return jsonify(message=response_message)
+
+
 
 if __name__ == '__main__':
     app.run(debug=True)
