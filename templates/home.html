@@ -10,12 +10,14 @@
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300&display=swap" rel="stylesheet">
     <link href="https://fonts.googleapis.com/css2?family=Sixtyfour&display=swap" rel="stylesheet">
     <link href="https://fonts.googleapis.com/css2?family=Roboto+Mono:wght@300&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Pixelify+Sans&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=VT323&display=swap" rel="stylesheet">
 </head>
 <body>
     <div class="header">
         <ul>
             <li><img src={{url_for('static', filename='logo.svg')}}></li>
-            <li class="company">StockDex</li>
+            <li class="company">COPe'Dex</li>
             <li style="float:right" class="profile">Welcome, {{username}}<img src={{url_for('static', filename='user.svg')}}></li>
         </ul>
     </div>
@@ -25,25 +27,19 @@
             <h2>Index</h2>
             <hr class="solid">
             <div class="boxes">
-                <div class="box">
-                    {% for row in data %}
+                {% for row in data %}
                     <div class="box">
                         {% for item in row %}
-                            <span>{{ item }}</span>
+                            {% if loop.index == 1 %}
+                                <h1>{{ item }}</h1>
+                            {% elif loop.index in [2, 3] %}
+                                <h3>{{ item }}</h3>
+                            {% else %}
+                                <!-- Handle additional heading levels as needed -->
+                            {% endif %}
                         {% endfor %}
                     </div>
                 {% endfor %}
-                </div>
-                <div class="box">
-
-                </div>
-                <div class="box">
-
-                </div>
-
-                <div class="box">
-
-                </div>
             </div>
         </div>
         <div class="toolArea">
@@ -54,23 +50,61 @@
                     <h1>Stats</h1>
                     <p>View single stocks and their data</p>
                 </div>
-                <div class="box">
+                <div class="box" onclick="redirectToCompare()">
                     <h1>Arena</h1>
                     <p>Compare stocks at a glance</p>
                 </div>
-                <div class="box">
+                <div class="box" onclick="redirectToFilter()">
                     <h1>Oak's Lab</h1>
                     <p>Filter out the right stock for you</p>
                 </div>
             </div>
         </div>
         <div class="newsAndLetter">
-
+            <div class="news" style="float:left">
+                <h2>News</h2>
+                <hr class="solid">
+            </div>
+            <div class="vl"></div>
+            <div class="newsletter">
+                <h2>Newsletter!</h2>
+                <hr class="solid">
+                <div class="box">
+                    <form id="subscriptionForm">
+                        <p>Subscribe to our newsletter to get the latest updates on the stock market!<br></p>
+                        <input type="email" name="email" id="email" placeholder="Email"><span><button type="submit" class="button">Subscribe</button></span>
+                        <div id="result">Check</div>
+                    </form>
+                </div>
+            </div>
         </div>
     </main>
+    <a href="/logout" class="logout-button">Logout</a>
     <script>
         function redirectToIndividual() {
             window.location.href = '/stats';
+        }
+        function redirectToCompare() {
+            window.location.href = '/compare';
+        }
+        function redirectToFilter() {
+            window.location.href = '/filter';
+        }
+        function subscribe() {
+            var email = document.getElementById('email').value;
+            var resultDiv = document.getElementById('result');
+        
+            $.ajax({
+                type: 'POST',
+                url: '/sendMail',
+                data: { email: email },
+                success: function(response) {
+                    resultDiv.innerHTML = response;
+                },
+                error: function(error) {
+                    resultDiv.innerHTML = 'Error occurred while subscribing.';
+                }
+            });
         }
     </script>
 </body>

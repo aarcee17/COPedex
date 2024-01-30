@@ -36,7 +36,6 @@ input[type="text"], input[type="password"] {
 
 button {
     width: 100%;
-    padding: 10px;
     border: none;
     background-color: #007bff;
 
@@ -64,6 +63,9 @@ button {
     color: white;
     border-radius: 5px;
     text-decoration: none;
+    position: fixed;
+    bottom: 20px;
+    right: 20px;
 }
 
 .logout-button:hover {
@@ -122,6 +124,10 @@ main{
     font-family: 'Sixtyfour', sans-serif;
 }
 
+.newsAndLetter h2 {
+    font-family: 'Sixtyfour', sans-serif;
+}
+
 .boxes {
     display: flex;
     flex-direction: row;
@@ -163,4 +169,70 @@ hr.solid {
 
 .toolArea .box {
     cursor: pointer;
+}
+
+.vl {
+    border-left: 3px solid #bbb;
+    height: 100%;
+    margin-top: 5vh;
+}
+
+.news {
+    width: 44vw;
+}
+
+.newsAndLetter {
+    height: 25vh;
+    display: flex;
+}
+
+.newsletter {
+    margin-left: 5vw;
+    width: 44vw;
+}
+
+.newsletter .box {
+    margin-left: 0;
+    width: 35vw;
+    border-radius: 5px;
+    border: 2px solid #bbb;
+    text-align: center;
+}
+
+.newsletter .box form {
+    font-family: 'Roboto Mono', monospace;
+    font-size: 0.9em;
+}
+
+.newsletter input {
+    padding: 5px;
+    width: 23vw;
+    height: 3vh;
+    border-radius: 3px;
+    border: none;
+}
+
+.newsletter button {
+    width: 6vw;
+    height: 4vh;
+    border-radius: 5px;
+    background-color: #007bff;
+    color: white;
+    font-family: 'Roboto Mono', monospace;
+    font-size: 0.9em;
+    margin-left: 5px;
+}
+
+#result {
+    margin-top: 6px;
+}
+
+.indexArea .box h1 {
+    margin-top: 0;
+    font-family: 'Pixelify Sans', sans-serif;
+}
+
+.indexArea .box h3 {
+    margin-top: 0;
+    font-family: 'VT323', monospace;
 }

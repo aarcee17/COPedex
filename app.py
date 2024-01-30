@@ -1,4 +1,4 @@
-from flask import Flask, render_template, request, redirect, url_for, flash, session
+from flask import Flask, render_template, request, redirect, url_for, flash, session, jsonify
 from flask_sqlalchemy import SQLAlchemy
 from werkzeug.security import generate_password_hash, check_password_hash
 import requests
@@ -10,7 +10,6 @@ def get_stock_dataN(symbol):
     response = requests.get(url)
     
     soup = BeautifulSoup(response.content, 'html.parser')
- 
     stock_name = soup.find('div', class_='zzDege').text
     stock_price = soup.find('div', class_='YMlKec fxKbKc').text
     #proloss = soup.find('div', class_='P2Luy Ebnabc ZYVHBb').text
@@ -45,7 +44,9 @@ def get_stock_dataB(symbol):
     return [stock_name,stock_price,symbol]
  
 
-#####################end of data fetch function
+#####################end of data fetch functionfrom flask_mail import Mail, Message
+import smtplib
+
 app = Flask(__name__)
 app.secret_key = 'your_secret_key'  # Replace with your actual secret key
 
@@ -53,7 +54,6 @@ app.secret_key = 'your_secret_key'  # Replace with your actual secret key
 app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///users.db'
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 db = SQLAlchemy(app)
-arr = ["a", "b", "c", "d"]
 # User Model
 class User(db.Model):
     id = db.Column(db.Integer, primary_key=True)
@@ -104,8 +104,8 @@ def dashboard():
     if 'user_id' in session:
         nifty = get_stock_dataN('NIFTY_50')
         sensex =  get_stock_dataB('SENSEX')
-        sbi = get_stock_dataNB('SBIN')
-        hdfc = get_stock_dataNB('HDFCBANK')
+        sbi = get_stock_dataN('NIFTY_BANK')
+        hdfc = get_stock_dataN('NIFTY_IT')
         data = [nifty,sensex,sbi,hdfc]
         return render_template('home.html', username=session['username'],data = data)
     
@@ -124,6 +124,23 @@ def stockDashboard():
         return render_template('stockDashboard.html')
     else:
         return redirect(url_for('index'))
+
+@app.route('/compare')
+def compareDashboard():
+    if 'user_id' in session:
+        return render_template('compareDashboard.html')
+    else:
+        return redirect(url_for('index'))
+
+@app.route('/sendMail', methods=['POST'])
+def send_mail():
+    email = request.form.get('email')
+
+    response_message = 'Thanks for subscribing!'
+
+    return jsonify(message=response_message)
+
+
 
 if __name__ == '__main__':
     app.run(debug=True)
