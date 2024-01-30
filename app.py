@@ -67,7 +67,8 @@ with app.app_context():
 @app.route('/')
 def index():
     return render_template('login.html')
-
+@app.route('/appdata', methods = ['POST'])
+def 
 @app.route('/register', methods=['GET', 'POST'])
 def register():
     if request.method == 'POST':

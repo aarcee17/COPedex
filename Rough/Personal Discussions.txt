@@ -5,3 +5,6 @@
 5) Fix security
 6) For the cherry, we'll add option for Dark Mode or set of themes
 7) Does any of the charting library show the plot background beforehand with no data?
+8) Parameters to be taken: +- returns/day, sharpe, 
+9) newsletter : from the collection of 30 research papers
+10) news : Gfinance extractable
