@@ -236,3 +236,130 @@ hr.solid {
     margin-top: 0;
     font-family: 'VT323', monospace;
 }
+
+.stockD {
+    margin-top: 12vh;
+    margin-bottom: auto;
+    height: 100%;
+}
+
+.sideBar .box {
+    margin-top: 16vh;
+    margin-left: 0;
+    height: 30vh;
+    width: 15vw;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-around;
+}
+
+.sideBar ul{
+    list-style: none;
+    margin-left: -1.6vw;
+}
+
+.sideBar li {
+    padding: 0.5vh;
+    border: #bbb solid 1px;
+    margin-top: 1vh;
+    border-radius: 5px;
+    width: 80%;
+    text-align: center;
+    height: 3vh;
+    font-family: 'Sixtyfour', sans-serif;
+    font-size: 1em;
+    cursor: pointer;
+}
+
+.sideBar a {
+    text-decoration: none;
+    color: black;
+}
+
+.sideBar {
+    display: block;
+}
+
+.active {
+    background-color: #bcc4ce;
+    color: white;
+}
+
+#statsForm h3 {
+    margin-top: 1.5vh;
+    font-family: 'Sixtyfour', sans-serif;
+}
+
+#statsForm input {
+    margin-top: -1.9vh;
+    border-radius: 5px;
+}
+
+::-webkit-datetime-edit-text { color: red; padding: 0 0.3em; }
+::-webkit-datetime-edit-month-field { color: blue; }
+::-webkit-datetime-edit-day-field { color: red; }
+::-webkit-datetime-edit-year-field { color: blue; }
+
+.filterD {
+    margin-top: 12vh;
+    margin-bottom: auto;
+    height: 100%;
+}
+
+.inline {
+    display: flex;
+    flex-direction: column;
+}
+
+#stockList {
+    list-style: none;
+    overflow-x: hidden;
+    overflow-y: auto;
+    text-align: center;
+    width: 18vw;
+    height: 5vh;
+    padding-left: 0;
+}
+
+#stockList li {
+    border: #bbb solid 1px;
+    border-radius: 5px;
+    font-family: 'VT323', monospace;
+    cursor: pointer;
+    font-size: 0.8em;
+}
+
+.stockSearchOut {
+    margin-left: 0;
+}
+
+.stockD .image-divider {
+    margin-top: -3.5px;
+}
+
+.filterD .image-divider {
+    margin-top: -3.5px;
+}
+
+.vhCenter {
+    margin-top: 5vh;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+}
+
+.statsSubmit {
+    margin-top: -2vh;
+    margin-bottom: 1vh;
+    height: 4vh;
+    border: 2px solid #bbb;
+    border-radius: 5px;
+}
+
+.statsReset {
+    height: 4vh;
+    border: 2px solid #bbb;
+    border-radius: 5px;
+    background-color: #c82333;
+}

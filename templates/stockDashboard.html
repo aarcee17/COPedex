@@ -15,9 +15,130 @@
     <div class="header">
         <ul>
             <li><img src={{url_for('static', filename='logo.svg')}}></li>
-            <li class="company">StockDex</li>
-            <li style="float:right" class="profile">Welcome, {{username}}<img src={{url_for('static', filename='user.svg')}}></li>
+            <li class="company">COPe'Dex</li>
+            <li style="float:right" class="profile">Stock Dashboard<img src={{url_for('static', filename='user.svg')}}></li>
         </ul>
     </div>
+    <main class="stockD">
+        <img class="image-divider" src="https://s3-us-west-2.amazonaws.com/s.cdpn.io/101448/wedding-divider-png-9.png" />
+        <div class="sideBar" style="float:left">
+            <div class="box">
+                <ul>
+                    <li><a href="/dashboard">Dashboard</a></li>
+                    <li class="active"><a href="/stats">Stats</a></li>
+                    <li><a href="/compare">Arena</a></li>
+                    <li><a href="/filter">Oak's Lab</a></li>
+                    <li><a href="/about">About</a></li>
+                </ul>
+            </div>
+        </div>
+        <form id="statsForm">
+            <div class="boxes">
+                <div class="box">
+                    <div class="inline">
+                        <h3>From Date</h3>
+                        <input type="date" name="fromDate" id="fromDate">
+                    </div>
+                    <div class="inline">
+                        <h3>To Date</h3>
+                        <input type="date" name="toDate" id="toDate">
+                    </div>
+                </div>
+                <div class="box">
+                    <h3>Stock Name</h3>
+                    <input type="text" name="stockName" id="stockName">
+                    <div class="stockSearchOut">
+                        <ul id="stockList">
+                            <li>Asian Paints Ltd (ASIANPAINT)</li>
+                            <li>Britannia Industries Ltd (BRITANNIA)</li>
+                            <li>Cipla Ltd (CIPLA)</li>
+                            <li>Eicher Motors Ltd (EICHERMOT)</li>
+                            <li>Nestle India Ltd (NESTLEIND)</li>
+                            <li>Grasim Industries Ltd (GRASIM)</li>
+                            <li>Hero MotoCorp Ltd (HEROMOTOCO)</li>
+                            <li>Hindalco Industries Ltd (HINDALCO)</li>
+                            <li>Hindustan Unilever Ltd (HINDUNILVR)</li>
+                            <li>ITC Ltd (ITC)</li>
+                            <li>Larsen & Toubro Ltd (LT)</li>
+                            <li>Mahindra & Mahindra Ltd (M&M)</li>
+                            <li>Reliance Industries Ltd (RELIANCE)</li>
+                            <li>Tata Consumer Products Ltd (TATACONSUM)</li>
+                            <li>Tata Motors Ltd (TATAMOTORS)</li>
+                            <li>Tata Steel Ltd (TATASTEEL)</li>
+                            <li>Wipro Ltd (WIPRO)</li>
+                            <li>Apollo Hospitals Enterprise Ltd (APOLLOHOSP)</li>
+                            <li>Dr Reddys Laboratories Ltd (DRREDDY)</li>
+                            <li>Titan Company Ltd (TITAN)</li>
+                            <li>State Bank of India (SBIN)</li>
+                            <li>Bharat Petroleum Corporation Ltd (BPCL)</li>
+                            <li>Kotak Mahindra Bank Ltd (KOTAKBANK)</li>
+                            <li>UPL Ltd (UPL)</li>
+                            <li>Infosys Ltd (INFY)</li>
+                            <li>Bajaj Finance Ltd (BAJFINANCE)</li>
+                            <li>Adani Enterprises Ltd (ADANIENT)</li>
+                            <li>Sun Pharmaceuticals Industries Ltd (SUNPHARMA)</li>
+                            <li>JSW Steel Ltd (JSWSTEEL)</li>
+                            <li>HDFC Bank Ltd (HDFCBANK)</li>
+                            <li>Tata Consultancy Services Ltd (TCS)</li>
+                            <li>ICICI Bank Ltd (ICICIBANK)</li>
+                            <li>Power Grid Corporation of India Ltd (POWERGRID)</li>
+                            <li>Maruti Suzuki India Ltd (MARUTI)</li>
+                            <li>IndusInd Bank Ltd (INDUSINDBK)</li>
+                            <li>Axis Bank Ltd (AXISBANK)</li>
+                            <li>HCL Technologies Ltd (HCLTECH)</li>
+                            <li>Oil & Natural Gas Corpn Ltd (ONGC)</li>
+                            <li>NTPC Ltd (NTPC)</li>
+                            <li>Coal India Ltd (COALINDIA)</li>
+                            <li>Bharti Airtel Ltd (BHARTIARTL)</li>
+                            <li>Tech Mahindra Ltd (TECHM)</li>
+                            <li>LTIMindtree Ltd (LTIM)</li>
+                            <li>Divis Laboratories Ltd (DIVISLAB)</li>
+                            <li>Adani Ports & Special Economic Zone Ltd (ADANIPORTS)</li>
+                            <li>HDFC Life Insurance Company Ltd (HDFCLIFE)</li>
+                            <li>SBI Life Insurance Company Ltd (SBILIFE)</li>
+                            <li>UltraTech Cement Ltd (ULTRACEMCO)</li>
+                            <li>Bajaj Auto Ltd (BAJAJ-AUTO)</li>
+                            <li>Bajaj Finserv Ltd (BAJAJFINSV)</li>
+                        </ul>
+                    </div>
+                </div>
+                <div class="box">
+                    <div class="vhCenter">
+                        <button type="submit" class="button statsSubmit">Submit</button>
+                        <button type="reset" class="button statsReset">Reset</button>
+                    </div>
+                </div>
+            </div>
+        </form>
+    </main>
+    <a href="/logout" class="logout-button">Logout</a>
+    <script>
+        document.getElementById('stockName').addEventListener('input', function (event) {
+            const searchTerm = event.target.value.toLowerCase();
+            const listItems = document.querySelectorAll('#stockList li');
+        
+            listItems.forEach(function (item) {
+                const itemText = item.textContent.toLowerCase();
+        
+                if (itemText.includes(searchTerm)) {
+                    item.style.display = 'list-item';
+                } else {
+                    item.style.display = 'none';
+                }
+            });
+        });
+        document.addEventListener("DOMContentLoaded", function () {
+            const stockList = document.getElementById("stockList");
+            const stockNameInput = document.getElementById("stockName");
+    
+            stockList.addEventListener("click", function (event) {
+                if (event.target.tagName === "LI") {
+                    const selectedStockSymbol = event.target.textContent.trim().split(' ').pop().replace(/[()]/g, '');
+                    stockNameInput.value = selectedStockSymbol;
+                }
+            });
+        });
+
+    </script>
 </body>
 </html>

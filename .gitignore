@@ -8,4 +8,8 @@ pyvenv.cfg
 instance
 testonly.py
 gfinance.py
+<<<<<<< Updated upstream
 alps.py
+=======
+test.html
+>>>>>>> Stashed changes

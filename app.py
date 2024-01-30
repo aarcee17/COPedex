@@ -132,6 +132,13 @@ def compareDashboard():
     else:
         return redirect(url_for('index'))
 
+@app.route('/filter')
+def filterDashboard():
+    if 'user_id' in session:
+        return render_template('filterDashboard.html')
+    else:
+        return redirect(url_for('index'))
+
 @app.route('/sendMail', methods=['POST'])
 def send_mail():
     email = request.form.get('email')
