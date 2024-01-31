@@ -41,13 +41,12 @@ def get_stock_dataB(symbol):
     return [stock_name,stock_price,symbol]
  
 
-# nifty = get_stock_dataN('NIFTY_50')
-# sensex =  get_stock_dataB('SENSEX')
-# sbi = get_stock_dataN('NIFTY_BANK')
-# hdfc = get_stock_dataN('NIFTY_IT')
+nifty = get_stock_dataN('NIFTY_50')
+sensex =  get_stock_dataB('SENSEX')
+sbi = get_stock_dataN('NIFTY_BANK')
+hdfc = get_stock_dataN('NIFTY_IT')
 
-# print(nifty)
-import yfinance as yf
+print(nifty)import yfinance as yf
 import plotly.graph_objects as go
 import pandas_ta as ta
 from plotly.subplots import make_subplots
@@ -127,13 +126,15 @@ def plot_stock_filters(symbol, stock_data, selected_filters):
             else:
                 print(f"Invalid filter option: {filter_option}. Skipping.")
                 continue
-        
+
             # Add trace to subplot
             fig.add_trace(go.Scatter(x=stock_data.index, y=filtered_data, mode='lines', name=filter_option), row=i+1, col=1)
 
         # Update layout
-        fig.update_layout(title=f"{symbol} Stock Price with Selected Filters", xaxis_title="Date", template="plotly_dark",
-                showlegend=True,
+        fig.update_layout(title=f"{symbol} Stock Price with Selected Filters",
+                          xaxis_title="Date",
+                          template="plotly_dark",
+                          showlegend=True,
                           height=len(selected_filters) * 300)  # Adjust the height based on the number of filters
 
         # Show the plot
@@ -149,40 +150,4 @@ stdate = input("start date: ")
 enddate = input("end date: ")
 # Fetch and plot stock data with selected filters
 stock_data = fetch_stock_data(user_stock_symbol,stdate,enddate)
-print(stock_data)
-
-def filterData(stock_data, user_selected_filters):
-    filtered_data = {}
-
-    for filter_option in user_selected_filters:
-        if filter_option == 'RSI':
-            filtered_data['RSI'] = calculate_rsi(stock_data)
-        elif filter_option == 'Bollinger':
-            filtered_data['Bollinger'] = calculate_bollinger(stock_data)
-        elif filter_option == 'VWAP':
-            filtered_data['VWAP'] = calculate_vwap(stock_data)
-        elif filter_option == 'High':
-            filtered_data['High'] = stock_data['High']
-        elif filter_option == 'Low':
-            filtered_data['Low'] = stock_data['Low']
-        elif filter_option == 'Close':
-            filtered_data['Close'] = stock_data['Close']
-        elif filter_option == 'Open':
-            filtered_data['Open'] = stock_data['Open']
-        elif filter_option == 'P/E ratio':
-            filtered_data['P/E ratio'] = calculate_pe_ratio(stock_data)
-        elif filter_option == 'EBITDA':
-            filtered_data['EBITDA'] = calculate_ebitda(stock_data)
-        elif filter_option == 'CAPEX':
-            filtered_data['CAPEX'] = calculate_capex(stock_data)
-        else:
-            print(f"Invalid filter option: {filter_option}. Skipping.")
-
-    return filtered_data
-
-# Example usage:
-# filtered_data_dict = filterData(stock_data, user_selected_filters)
-# print(filtered_data_dict)
-
-    
-# plot_stock_filters(user_stock_symbol, stock_data, user_selected_filters)
+plot_stock_filters(user_stock_symbol, stock_data, user_selected_filters)

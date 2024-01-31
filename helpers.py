@@ -174,3 +174,63 @@ def filterData(stock_data, user_selected_filters):
 
 
 # print(fetch_stock_data(['SBIN.NS'],"2023-07-22","2024-01-22"))
+def fetch_multiple_stock_data(symbols, st, en):
+    stock_data = {}
+    
+    for symbol in symbols:
+        try:
+            data = yf.download(symbol, start=st, end=en, ignore_tz=True)
+            stock_data[symbol] = data
+        except Exception as e:
+            print(f"Error fetching stock data for {symbol}: {e}")
+            stock_data[symbol] = None
+
+    return stock_data
+
+def plot_multiple_stocks(symbol_data, selected_filters):
+    if symbol_data:
+    
+        fig = make_subplots(rows=len(selected_filters), cols=1, shared_xaxes=True, subplot_titles=selected_filters)
+
+        for i, filter_option in enumerate(selected_filters):
+          
+            for symbol, data in symbol_data.items():
+                if data is not None and not data.empty:
+                  
+                    if filter_option == 'RSI':
+                        filtered_data = calculate_rsi(data)
+                    elif filter_option == 'Bollinger':
+                        filtered_data = calculate_bollinger(data)
+                    elif filter_option == 'VWAP':
+                        filtered_data = calculate_vwap(data)
+                    elif filter_option == 'High':
+                        filtered_data = data['High']
+                    elif filter_option == 'Low':
+                        filtered_data = data['Low']
+                    elif filter_option == 'Close':
+                        filtered_data = data['Close']
+                    elif filter_option == 'Open':
+                        filtered_data = data['Open']
+                    elif filter_option == 'P/E ratio':
+                        filtered_data = calculate_pe_ratio(data)
+                    elif filter_option == 'EBITDA':
+                        filtered_data = calculate_ebitda(data)
+                    elif filter_option == 'CAPEX':
+                        filtered_data = calculate_capex(data)
+                    else:
+                        print(f"Invalid filter option: {filter_option}. Skipping.")
+                        continue
+                    
+                    
+                    fig.add_trace(go.Scatter(x=data.index, y=filtered_data, mode='lines', name=f"{symbol} - {filter_option}"), row=i+1, col=1)
+
+   
+        fig.update_layout(title=f"Stocks Comparison with Selected Filters", xaxis_title="Date", template="plotly_dark",
+                showlegend=True,
+                          height=len(selected_filters) * 300)  
+
+        
+        fig.show()
+
+    else:
+        print("No data available for the given stock symbols.")
