@@ -3,46 +3,9 @@ from flask_sqlalchemy import SQLAlchemy
 from werkzeug.security import generate_password_hash, check_password_hash
 import requests
 from bs4 import BeautifulSoup
+import helpers
+import numpy as np
 ##################fetching data from Gfinance
-
-def get_stock_dataN(symbol):
-    url = f"https://www.google.com/finance/quote/{symbol}:INDEXNSE"
-    response = requests.get(url)
-    
-    soup = BeautifulSoup(response.content, 'html.parser')
-    stock_name = soup.find('div', class_='zzDege').text
-    stock_price = soup.find('div', class_='YMlKec fxKbKc').text
-    #proloss = soup.find('div', class_='P2Luy Ebnabc ZYVHBb').text
-    #stock_profit = soup.find('div', class_='').text
-    
-    return [stock_name,stock_price,symbol]
-  
-def get_stock_dataNB(symbol):
-    url = f"https://www.google.com/finance/quote/{symbol}:NSE"
-    response = requests.get(url)
-    
-    soup = BeautifulSoup(response.content, 'html.parser')
- 
-    stock_name = soup.find('div', class_='zzDege').text
-    stock_price = soup.find('div', class_='YMlKec fxKbKc').text
-    #proloss = soup.find('div', class_='P2Luy Ebnabc ZYVHBb').text
-    #stock_profit = soup.find('div', class_='').text
-    
-    return [stock_name,stock_price,symbol]
-
-def get_stock_dataB(symbol):
-    url = f"https://www.google.com/finance/quote/{symbol}:INDEXBOM"
-    response = requests.get(url)
-    
-    soup = BeautifulSoup(response.content, 'html.parser')
- 
-    stock_name = soup.find('div', class_='zzDege').text
-    stock_price = soup.find('div', class_='YMlKec fxKbKc').text
-    #proloss = soup.find('div', class_='P2Luy Ebnabc ZYVHBb').text
-    #stock_profit = soup.find('div', class_='JwB6zf').text
-    #print(f"{stock_name} ({symbol}): {stock_price}")    
-    return [stock_name,stock_price,symbol]
- 
 
 #####################end of data fetch functionfrom flask_mail import Mail, Message
 import smtplib
@@ -67,8 +30,17 @@ with app.app_context():
 @app.route('/')
 def index():
     return render_template('login.html')
-@app.route('/appdata', methods = ['POST'])
-def 
+
+@app.route('/singleData', methods = ['GET'])
+def fetchDataSingle():
+    print("meow")
+    stock_data = helpers.fetch_stock_data(request.args.get('stockName')+'.NS', request.args.get('fromDate'), request.args.get('toDate'))
+    stock_data.reset_index(inplace=True)
+    print(stock_data)
+    if stock_data is not None:
+        stock_data_json = stock_data.to_json(orient='records')
+        return jsonify(stock_data_json)
+
 @app.route('/register', methods=['GET', 'POST'])
 def register():
     if request.method == 'POST':
@@ -102,10 +74,10 @@ def login():
 @app.route('/dashboard')
 def dashboard():
     if 'user_id' in session:
-        nifty = get_stock_dataN('NIFTY_50')
-        sensex =  get_stock_dataB('SENSEX')
-        sbi = get_stock_dataN('NIFTY_BANK')
-        hdfc = get_stock_dataN('NIFTY_IT')
+        nifty = helpers.get_stock_dataN('NIFTY_50')
+        sensex =  helpers.get_stock_dataB('SENSEX')
+        sbi = helpers.get_stock_dataN('NIFTY_BANK')
+        hdfc = helpers.get_stock_dataN('NIFTY_IT')
         data = [nifty,sensex,sbi,hdfc]
         return render_template('home.html', username=session['username'],data = data)
     

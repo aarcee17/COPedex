@@ -10,6 +10,9 @@
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300&display=swap" rel="stylesheet">
     <link href="https://fonts.googleapis.com/css2?family=Sixtyfour&display=swap" rel="stylesheet">
     <link href="https://fonts.googleapis.com/css2?family=Roboto+Mono:wght@300&display=swap" rel="stylesheet">
+    <script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
+    <script src="https://cdn.plot.ly/plotly-latest.min.js"></script>
+    <script src="https://d3js.org/d3.v5.min.js"></script>
 </head>
 <body>
     <div class="header">
@@ -32,7 +35,7 @@
                 </ul>
             </div>
         </div>
-        <form id="statsForm">
+        <form id="statsForm" method='post' action='/singleData'>
             <div class="boxes">
                 <div class="box">
                     <div class="inline">
@@ -104,12 +107,18 @@
                 </div>
                 <div class="box">
                     <div class="vhCenter">
-                        <button type="submit" class="button statsSubmit">Submit</button>
+                        <button type="submit" class="button statsSubmit" id="submitBtn">Submit</button>
                         <button type="reset" class="button statsReset">Reset</button>
                     </div>
                 </div>
             </div>
         </form>
+        <div class="chart">
+            <div class="box">
+                <h2>Stock Chart</h2>
+                <div id="myChart"></div>
+            </div>
+        </div>
     </main>
     <a href="/logout" class="logout-button">Logout</a>
     <script>
@@ -138,7 +147,84 @@
                 }
             });
         });
+        document.getElementById('statsForm').addEventListener('submit', function (event) {
+            event.preventDefault(); // Prevent the form from submitting normally
 
+            // Get form data
+            const fromDate = document.getElementById('fromDate').value;
+            const toDate = document.getElementById('toDate').value;
+            const stockName = document.getElementById('stockName').value;
+
+            // Fetch data from the endpoint
+            fetch(`/singleData?stockName=${stockName}&fromDate=${fromDate}&toDate=${toDate}`)
+                .then(response => response.json())
+                .then(data => {
+                    // Load Google Charts library
+                    //var dates = data.map(entry => entry.Date);
+                    data = JSON.parse(data);
+                    console.log(data);
+                    var dates = data.map(entry => new Date(entry.Date));
+                    var closePrices = data.map(entry => entry.Close);
+                    var openPrices = data.map(entry => entry.Open);
+                    var trace1 = {
+                        x: dates,
+                        y: closePrices,
+                        type: 'scatter',
+                        mode: 'lines',
+                        name: 'Close Price'
+                    };
+                    var layout = {
+                        title: stockName + '\'s Prices Over Time',
+                        xaxis: {
+                            title: 'Date'
+                        },
+                        yaxis: {
+                            title: 'Close Price'
+                        },
+                        font: {
+                            family: 'VT323, monospace',
+                            size: 14,
+                            color: '#7f7f7f'
+                        }
+                    };
+                    var trace2 = {
+                        x: dates,
+                        y: openPrices,
+                        type: 'scatter',
+                        mode: 'lines',
+                        name: 'Open Price'
+                    };
+        
+                    // Create the plot
+                    Plotly.newPlot('myChart', [trace1, trace2], layout);
+                })
+                .catch(error => console.error('Error fetching data:', error));
+            });
+            function generateDateRange(startDate, endDate, numPoints) {
+                return d3.time.scale()
+                    .domain([startDate, endDate])
+                    .ticks(numPoints)
+                    .map(date => new Date(date));
+            }
+
+        function drawChart(data) {
+            const chartData = new google.visualization.DataTable();
+            chartData.addColumn('string', 'Date');
+            chartData.addColumn('number', 'Close Price');
+
+            data.forEach(entry => {
+                chartData.addRow([entry.Date, entry.Close]);
+            });
+
+            const options = {
+                title: 'Stock Chart',
+                curveType: 'function',
+                legend: { position: 'bottom' }
+            };
+
+            const chart = new google.visualization.LineChart(document.getElementById('myChart'));
+            chart.draw(chartData, options);
+        }
     </script>
 </body>
 </html>

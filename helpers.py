@@ -1,6 +1,9 @@
+import yfinance as yf
+import plotly.graph_objects as go
+import pandas_ta as ta
+from plotly.subplots import make_subplots
 import requests
 from bs4 import BeautifulSoup
-##################fetching data from Gfinance
 
 def get_stock_dataN(symbol):
     url = f"https://www.google.com/finance/quote/{symbol}:INDEXNSE"
@@ -39,24 +42,12 @@ def get_stock_dataB(symbol):
     #stock_profit = soup.find('div', class_='JwB6zf').text
     #print(f"{stock_name} ({symbol}): {stock_price}")    
     return [stock_name,stock_price,symbol]
- 
-
-# nifty = get_stock_dataN('NIFTY_50')
-# sensex =  get_stock_dataB('SENSEX')
-# sbi = get_stock_dataN('NIFTY_BANK')
-# hdfc = get_stock_dataN('NIFTY_IT')
-
-# print(nifty)
-import yfinance as yf
-import plotly.graph_objects as go
-import pandas_ta as ta
-from plotly.subplots import make_subplots
 
 # Function to fetch stock data
 def fetch_stock_data(symbol, st, en):
     try:
         # Fetch historical stock data
-        stock_data = yf.download(symbol, start=st, end=en)
+        stock_data = yf.download(symbol, start=st, end=en, ignore_tz=True)
         return stock_data
     except Exception as e:
         print(f"Error fetching stock data: {e}")
@@ -77,6 +68,7 @@ def calculate_vwap(stock_data):
     stock_data['typical_price'] = (stock_data['High'] + stock_data['Low'] + stock_data['Close']) / 3
     stock_data['vwap'] = ta.sma(stock_data['typical_price'] * stock_data['Volume'], length=14) / ta.sma(stock_data['Volume'], length=14)
     return stock_data['vwap']
+
 
 # Function to calculate P/E ratio
 def calculate_pe_ratio(stock_data):
@@ -143,13 +135,13 @@ def plot_stock_filters(symbol, stock_data, selected_filters):
         print("No data available for the given stock symbol.")
 
 # Example: User input for stock symbol and selected filters
-user_stock_symbol = input("Enter stock symbol: ") + ".NS"
-user_selected_filters = input("Enter selected filters (comma-separated, e.g., RSI, Bollinger, VWAP, High, Low, Close, Open, EBITDA, CAPEX): ").split(',')
-stdate = input("start date: ")
-enddate = input("end date: ")
+# user_stock_symbol = input("Enter stock symbol: ") + ".NS"
+# user_selected_filters = input("Enter selected filters (comma-separated, e.g., RSI, Bollinger, VWAP, High, Low, Close, Open, EBITDA, CAPEX): ").split(',')
+# stdate = input("start date: ")
+# enddate = input("end date: ")
 # Fetch and plot stock data with selected filters
-stock_data = fetch_stock_data(user_stock_symbol,stdate,enddate)
-print(stock_data)
+# stock_data = fetch_stock_data(user_stock_symbol,stdate,enddate)
+# print(stock_data)
 
 def filterData(stock_data, user_selected_filters):
     filtered_data = {}
@@ -180,9 +172,5 @@ def filterData(stock_data, user_selected_filters):
 
     return filtered_data
 
-# Example usage:
-# filtered_data_dict = filterData(stock_data, user_selected_filters)
-# print(filtered_data_dict)
 
-    
-# plot_stock_filters(user_stock_symbol, stock_data, user_selected_filters)
+# print(fetch_stock_data(['SBIN.NS'],"2023-07-22","2024-01-22"))

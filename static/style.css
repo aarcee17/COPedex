@@ -363,3 +363,16 @@ hr.solid {
     border-radius: 5px;
     background-color: #c82333;
 }
+
+.chart .box {
+    width: 55vw;
+    margin-left: 18vw;
+    height: 50vh;
+    margin-top: 3vh;
+}
+
+#myChart {
+    width: 55vw;
+    height: 40vh;
+    border-radius: 15px;
+}
