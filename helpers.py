@@ -39,7 +39,6 @@ def get_stock_dataB(symbol):
     response = requests.get(url)
     
     soup = BeautifulSoup(response.content, 'html.parser')
- 
     stock_name = soup.find('div', class_='zzDege').text
     stock_price = soup.find('div', class_='YMlKec fxKbKc').text
     #proloss = soup.find('div', class_='P2Luy Ebnabc ZYVHBb').text
@@ -52,7 +51,18 @@ def fetch_stock_data(symbol, st, en):
     try:
         # Fetch historical stock data
         stock_data = yf.download(symbol, start=st, end=en, ignore_tz=True)
-        return stock_data
+        ticker = yf.Ticker(symbol)
+
+        info = ticker.info
+        print(info)
+        name = info.get('longName')
+        sector = info.get('sector')
+        website = info.get('website')
+        marketCap = info.get('marketCap')
+        fiftyweekhigh = info.get('fiftyTwoWeekHigh')
+        debtToEquity = info.get('debtToEquity')
+        dividend = info.get('dividendRate')
+        return [stock_data, name, sector, website, marketCap, fiftyweekhigh, debtToEquity, dividend] 
     except Exception as e:
         print(f"Error fetching stock data: {e}")
         return None

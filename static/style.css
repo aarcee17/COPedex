@@ -110,8 +110,8 @@ main{
 }
 
 .header img {
-    height: 35px;
-    width: 35px;
+    height: 5vh;
+    width: 8vw;
     border-radius: 50%;
     margin-right: 10px;
 }
@@ -122,8 +122,8 @@ main{
 }
 
 .profile {
-    font-family: 'Montserrat', sans-serif;
-    font-size: 2em;
+    font-family: 'VT323', monospace;
+    font-size: 2.6em;
 }
 
 .indexArea h2 {
@@ -277,13 +277,26 @@ hr.solid {
 }
 
 .sideBar .box {
-    margin-top: 16vh;
+    margin-top: 5vh;
     margin-left: 0;
     height: 30vh;
     width: 15vw;
     display: flex;
     flex-direction: column;
     justify-content: space-around;
+    border: #c82333 solid 4px;
+}
+
+.clock{
+    height: 15vh;
+    margin-top: 8vh;
+    width: 15vw;
+    margin-left: 0;
+    background-color: #f2f2f2;
+    border-radius: 10px;
+    box-shadow: 0 0 20px rgba(0, 0, 0, 0.1);
+    padding: 15px;
+    border: #c82333 solid 4px;
 }
 
 .sideBar ul{
@@ -447,10 +460,11 @@ hr.solid {
 }
 
 .chart .box {
-    width: 55vw;
+    width: 50vw;
     margin-left: 18vw;
     height: 50vh;
     margin-top: 3vh;
+    border: 8px solid #007bff;
 }
 
 .chart h2 {
@@ -459,8 +473,8 @@ hr.solid {
 }
 
 #myChart {
-    width: 55vw;
-    height: 42vh;
+    width: 50vw;
+    height: 40vh;
     border-radius: 15px;
 }
 
@@ -587,4 +601,58 @@ hr.bigLine {
     margin-left: -1vw;
     z-index: 5;
     margin-top: -2vh;
+}
+
+#compareForm .box {
+    border: #c82333 solid 4px;
+}
+
+#statsForm .box {
+    border: #c82333 solid 4px;
+}
+
+.boxExtra {
+    width: 18vw;
+    height: 43.3vh;
+    background-color: #f2f2f2;
+    border-radius: 10px;
+    box-shadow: 0 0 20px rgba(0, 0, 0, 0.1);
+    padding: 15px;
+    position: absolute;
+    bottom: 15vh;
+    right: 6.2vw;
+    border: #007bff solid 4px
+}
+
+.boxExtra ul {
+    list-style: none;
+    font-family: 'VT323', monospace;
+    font-size: 1.5em;
+    margin-left: -2.8vw;
+    margin-top: 2vh;
+}
+
+.comparechart .box {
+    width: 72.5vw;
+    margin-left: 18vw;
+    height: 50vh;
+    margin-top: 3vh;
+    border: 8px solid #007bff;
+}
+
+.comparechart h2 {
+    margin-top: 0;
+    font-family: 'Pixelify Sans', sans-serif;
+}
+
+.comparechart #myChart {
+    width: 72.5vw;
+    height: 40vh;
+    border-radius: 15px;
+}
+
+.clock h1 {
+    margin-top: 5vh;
+    font-family: 'Pixelify Sans', sans-serif;
+    text-align: center;
 }

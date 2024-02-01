@@ -17,16 +17,20 @@
     <script src="https://d3js.org/d3.v5.min.js"></script>
 </head>
 <body>
+    <div class="preloader-container">
+        <img src="./static/preloader.svg" alt="Preloader" class="preloader-image">
+    </div>
     <div class="header">
         <ul>
-            <li><img src={{url_for('static', filename='logo.svg')}}></li>
-            <li class="company">COPe'Dex</li>
-            <li style="float:right" class="profile">Stock Dashboard<img src={{url_for('static', filename='user.svg')}}></li>
+            <li><img src={{url_for('static', filename='logo.jpg')}}></li>
+            <li style="float:right" class="profile">Find THE One<img src={{url_for('static', filename='user.svg')}}></li>
         </ul>
     </div>
     <main class="filterD">
         <img class="image-divider" src="https://s3-us-west-2.amazonaws.com/s.cdpn.io/101448/wedding-divider-png-9.png" />
         <div class="sideBar" style="float:left">
+            <div class="clock">
+            </div>
             <div class="box">
                 <ul>
                     <li><a href="/dashboard">Dashboard</a></li>
@@ -194,7 +198,17 @@
             </div>
         </div>
     </main>
+    <div class="modal-content">
+        <span class="close" onclick="closeModal()">&times;</span>
+        <h2 id="modalStockSymbol"></h2>
+        <p id="modalCompanyName"></p>
+        <p id="modalSector"></p>
+        <div id="modalChart"></div>
+    </div>
     <script>
+            document.addEventListener("DOMContentLoaded", function() {
+                document.body.classList.add("loaded");
+            });
         var processedFinData = JSON.parse('{{ processedFinData | tojson | safe }}');
             console.log(processedFinData);
         function filter(event) {
@@ -335,8 +349,115 @@
                 allStocksScrollDiv.innerHTML += stockHTML;
             }
         }
-            
-            
+        const timeElement = document.getElementById("time");
+
+        function updateTime() {
+            const now = new Date();
+            const hours = now.getHours();
+            const minutes = now.getMinutes();
+            const seconds = now.getSeconds();
+
+            // Format the string with leading zeroes
+            const clockStr = `${hours.toString().padStart(2, '0')}:${minutes.toString().padStart(2, '0')}:${seconds.toString().padStart(2, '0')}`;
+
+            timeElement.innerText = clockStr;
+        }
+
+        updateTime();
+        setInterval(updateTime, 1000);
+        function openModal(symbol) {
+            var modal = document.getElementById("stockModal");
+            var toDate = new Date(year,month,day)
+            var fromDate = new Date(year-2,month,day)
+            fetch(`/singleData?stockName=${symbol}&fromDate=${fromDate}&toDate=${toDate}`)
+            .then(response => response.json())
+            .then(data => {
+                var modalStockSymbol = document.getElementById("modalStockSymbol");
+                var modalCompanyName = document.getElementById("modalCompanyName");
+                var modalSector = document.getElementById("modalSector");
+                var modalChart = document.getElementById("modalChart");
+                modalStockSymbol.innerHTML = symbol;
+                modalCompanyName.innerHTML = data.longName;
+                modalSector.innerHTML = data.sector;
+                var dataF = JSON.parse(data.stock_data)
+                var trace1 = {
+                    type: "scatter",
+                    mode: "lines",
+                    name: 'High',
+                    x: dataF.date,
+                    y: dataF.high,
+                    line: {color: '#17BECF'}
+                }
+                var trace2 = {
+                    type: "scatter",
+                    mode: "lines",
+                    name: 'Low',
+                    x: data.date,
+                    y: data.low,
+                    line: {color: '#7F7F7F'}
+                }
+                var trace3 = {
+                    type: "scatter",
+                    mode: "lines",
+                    name: 'Open',
+                    x: data.date,
+                    y: data.open,
+                    line: {color: '#FF0000'}
+                }
+                var trace4 = {
+                    type: "scatter",
+                    mode: "lines",
+                    name: 'Close',
+                    x: data.date,
+                    y: data.close,
+                    line: {color: '#00FF00'}
+                }
+                var trace5 = {
+                    type: "scatter",
+                    mode: "lines",
+                    name: 'Volume',
+                    x: data.date,
+                    y: data.volume,
+                    line: {color: '#0000FF'}
+                }
+                var data = [trace1, trace2, trace3, trace4, trace5];
+                var layout = {
+                    title: 'Stock Data',
+                    xaxis: {
+                        autorange: true,
+                        range: ['2015-02-17', '2021-02-16'],
+                        rangeselector: {buttons: [
+                            {
+                            count: 1,
+                            label: '1m',
+                            step: 'month',
+                            stepmode: 'backward'
+                            },
+                            {
+                            count: 6,
+                            label: '6m',
+                            step: 'month',
+                            stepmode: 'backward'
+                            },
+                            {step: 'all'}
+                        ]},
+                        rangeslider: {range: ['2015-02-17', '2021-02-16']},
+                        type: 'date'
+                    },
+                    yaxis: {
+                        autorange: true,
+                        range: [86.8700008333, 138.870004167],
+                        type: 'linear'
+                    }
+                };
+                modal.style.display = "block";
+                Plotly.newPlot('modalChart', data, layout);
+            });
+        }
+        function closeModal() {
+            var modal = document.getElementById("stockModal");
+            modal.style.display = "none";
+        }
     </script>
 </body>
 </html>

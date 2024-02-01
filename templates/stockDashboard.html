@@ -19,14 +19,16 @@
 <body>
     <div class="header">
         <ul>
-            <li><img src={{url_for('static', filename='logo.svg')}}></li>
-            <li class="company">COPe'Dex</li>
-            <li style="float:right" class="profile">Stock Dashboard<img src={{url_for('static', filename='user.svg')}}></li>
+            <li><img src={{url_for('static', filename='logo.jpg')}}></li>
+            <li style="float:right" class="profile">Stonks<img src={{url_for('static', filename='user.svg')}}></li>
         </ul>
     </div>
     <main class="stockD">
         <img class="image-divider" src="https://s3-us-west-2.amazonaws.com/s.cdpn.io/101448/wedding-divider-png-9.png" />
         <div class="sideBar" style="float:left">
+            <div class="clock" id="clock">
+                <h1 id="time"></h1>
+            </div>
             <div class="box">
                 <ul>
                     <li><a href="/dashboard">Dashboard</a></li>
@@ -120,10 +122,61 @@
                 <h2>Stock Chart</h2>
                 <div id="myChart"></div>
             </div>
+            <div class="boxExtra">
+                <h2>Stock Stats</h2>
+                <ul>
+                    <li>Sector: <span style='float:right' id='sector'></span></li>
+                    <li>Company Name: <span style='float:right' id='longname'></span></li>
+                    <li>Website: <span style='float:right' id='website'></span></li>
+                    <li>Market Cap: <span style='float:right' id='marketCap'></span></li>
+                    <li>52-Week High: <span style='float:right' id='fiftyWeekHigh'></span></li>
+                    <li>Debt-to-Equity: <span style='float:right' id='debtToEquity'></span></li>
+                    <li>Dividend Rate: <span style='float:right' id='dividend'></span></li>
+            </div>
         </div>
     </main>
     <a href="/logout" class="logout-button">Logout</a>
     <script>
+        document.addEventListener("DOMContentLoaded", function () {
+            const stockList = document.getElementById("stockList");
+            const stockNameInput = document.getElementById("stockName");
+        
+            // Create an empty chart when the page loads
+            var layout = {
+                title: 'Stock Chart',
+                xaxis: {
+                    title: 'Date',
+                    rangeslider: {}
+                },
+                yaxis: {
+                    title: 'Close Price'
+                },
+                font: {
+                    family: 'VT323, monospace',
+                    size: 14,
+                    color: '#7f7f7f'
+                }
+            };
+        
+            var emptyData = [{
+                x: [],
+                y: [],
+                type: 'scatter',
+                mode: 'lines',
+                name: 'Close Price'
+            }];
+        
+            Plotly.newPlot('myChart', emptyData, layout);
+        
+            // Add event listener for the stock list
+            stockList.addEventListener("click", function (event) {
+                if (event.target.tagName === "LI") {
+                    const selectedStockSymbol = event.target.textContent.trim().split(' ').pop().replace(/[()]/g, '');
+                    stockNameInput.value = selectedStockSymbol;
+                }
+            });
+        });
+        
         document.getElementById('stockName').addEventListener('input', function (event) {
             const searchTerm = event.target.value.toLowerCase();
             const listItems = document.querySelectorAll('#stockList li');
@@ -138,17 +191,8 @@
                 }
             });
         });
-        document.addEventListener("DOMContentLoaded", function () {
-            const stockList = document.getElementById("stockList");
-            const stockNameInput = document.getElementById("stockName");
-    
-            stockList.addEventListener("click", function (event) {
-                if (event.target.tagName === "LI") {
-                    const selectedStockSymbol = event.target.textContent.trim().split(' ').pop().replace(/[()]/g, '');
-                    stockNameInput.value = selectedStockSymbol;
-                }
-            });
-        });
+        
+        
         document.getElementById('statsForm').addEventListener('submit', function (event) {
             event.preventDefault(); // Prevent the form from submitting normally
             
@@ -173,9 +217,9 @@
             }
             fetch(`/singleData?stockName=${stockName}&fromDate=${fromDateInput.value}&toDate=${toDateInput.value}`)
             .then(response => response.json())
-                .then(data => {
-                    console.log(data);
-                    data = JSON.parse(data);
+                .then(dataI => {
+                    console.log(dataI);
+                    data = JSON.parse(dataI.stock_data);
                     console.log(data);
                     var dates = data.map(entry => new Date(entry.Date));
                     var closePrices = data.map(entry => entry.Close);
@@ -213,7 +257,7 @@
                         }],
                     };                    
                     var layout = {
-                        title: stockName + '\'s Prices Over Time',
+                        title: dataI.longName,
                         xaxis: {
                             title: 'Date',
                             rangeselector: selectorOptions,
@@ -238,10 +282,31 @@
         
                     // Create the plot
                     Plotly.newPlot('myChart', [trace1, trace2], layout);
+                    document.getElementById('sector').innerHTML = dataI.sector;
+                    document.getElementById('longname').innerHTML = dataI.longName;
+                    document.getElementById('website').innerHTML = dataI.website;
+                    document.getElementById('debtToEquity').innerHTML = dataI.debtTo;
+                    document.getElementById('dividend').innerHTML = dataI.dividend;
+                    document.getElementById('marketCap').innerHTML = dataI.marketCap;
+                    document.getElementById('fiftyWeekHigh').innerHTML = dataI.fiftyweekhigh;
                 })
                 .catch(error => console.error('Error fetching data:', error));
             });
+            const timeElement = document.getElementById("clock");
 
+            function updateTime() {
+                const now = new Date();
+                const hours = now.getHours();
+                const minutes = now.getMinutes();
+                const seconds = now.getSeconds();
+        
+                // Format the string with leading zeroes
+                const clockStr = `${hours.toString().padStart(2, '0')}:${minutes.toString().padStart(2, '0')}:${seconds.toString().padStart(2, '0')}`;
+        
+                timeElement.innerText = clockStr;
+            }
+            updateTime();
+            setInterval(updateTime, 1000);
     </script>
 </body>
 </html>

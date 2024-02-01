@@ -116,7 +116,8 @@ def filterDashboard():
             line = line.split(',')
             finDataforFilter.append(helpers.get_financial_data(line[2]))
         processedFinData = finDataforFilter
-        print(processedFinData)
+        # print(processedFinData)
+        
         return render_template('filterDashboard.html', stocksData=sendstocks, processedFinData=processedFinData)
     else:
         return redirect(url_for('index'))
@@ -138,12 +139,24 @@ def aboutDashboard():
 
 @app.route('/singleData', methods = ['GET'])
 def fetchDataSingle():
-    stock_data = helpers.fetch_stock_data(request.args.get('stockName')+'.NS', request.args.get('fromDate'), request.args.get('toDate'))
+    [stock_data, longName, sector, website, marketCap, fiftyweekhigh, debtToEquity, dividend] = helpers.fetch_stock_data(request.args.get('stockName')+'.NS', request.args.get('fromDate'), request.args.get('toDate'))
     stock_data.reset_index(inplace=True)
     print(stock_data)
+    print(longName)
     if stock_data is not None:
         stock_data_json = stock_data.to_json(orient='records')
-        return jsonify(stock_data_json)
+        response_data = {
+            'stock_data': stock_data_json,
+            'longName': longName,
+            'sector': sector,
+            'website': website,
+            'marketCap': marketCap,
+            'fiftyweekhigh': fiftyweekhigh,
+            'debtTo': debtToEquity,
+            'dividend': dividend
+        }
+
+        return jsonify(response_data)
 
 @app.route('/multiData', methods = ['GET'])
 def multiStocks():
@@ -157,7 +170,7 @@ def multiStocks():
     for key in stocks_data:
         json_data = stocks_data[key].reset_index().to_json(orient='records')
         json_data_list.append(json_data)
-    print(jsonify(json_data_list))
+    # print(jsonify(json_data_list))
     return jsonify(json_data_list)
 
 
