@@ -6,7 +6,8 @@ import requests
 from bs4 import BeautifulSoup
 from datetime import datetime, time
 import pytz
-
+import pandas as pd
+from gnews import GNews
 
 def get_stock_dataN(symbol):
     url = f"https://www.google.com/finance/quote/{symbol}:INDEXNSE"
@@ -314,7 +315,7 @@ def get_financial_data(symbol):
 
 def get_nifty50cov(filter_choice, range_start, range_end):
     nifty50cov = {}
-    df = pd.read_csv('nifty50.csv')
+    df = pd.read_csv('./static/nifty50.csv')
     nifty50_symbols = df['Symbol']
     for symbol in nifty50_symbols:
 
@@ -331,6 +332,12 @@ def get_nifty50cov(filter_choice, range_start, range_end):
                 print(f"Error processing filter for {symbol.ticker}: {e}")
 
     return nifty50cov
+
+def newsMain():
+    google_news = GNews()
+    nseNews = google_news.get_news('NSE')
+    bseNews = google_news.get_news('BSE')
+    return [nseNews[:5],bseNews[:5]]
 
 #filter_choice = input("Enter the filter you want to use (e.g., bookValue, payoutRatio, etc.): ")
 #range_start = float(input("Enter the start of the range: "))

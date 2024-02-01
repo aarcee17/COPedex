@@ -70,7 +70,8 @@ def dashboard():
         sbi = helpers.get_stock_dataN('NIFTY_BANK')
         hdfc = helpers.get_stock_dataN('NIFTY_IT')
         data = [nifty,sensex,sbi,hdfc]
-        return render_template('home.html', username=session['username'],data = data)
+        news = helpers.newsMain()
+        return render_template('home.html', username=session['username'], data = data, news = news)
     
     else:
         return redirect(url_for('index'))
@@ -98,6 +99,7 @@ def compareDashboard():
 @app.route('/filter')
 def filterDashboard():
     if 'user_id' in session:
+        
         return render_template('filterDashboard.html')
     else:
         return redirect(url_for('index'))
@@ -140,6 +142,8 @@ def multiStocks():
         json_data_list.append(json_data)
     print(jsonify(json_data_list))
     return jsonify(json_data_list)
+
+
 
 if __name__ == '__main__':
     app.run(debug=True)
