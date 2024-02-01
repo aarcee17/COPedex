@@ -10,6 +10,8 @@
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300&display=swap" rel="stylesheet">
     <link href="https://fonts.googleapis.com/css2?family=Sixtyfour&display=swap" rel="stylesheet">
     <link href="https://fonts.googleapis.com/css2?family=Roboto+Mono:wght@300&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Pixelify+Sans:wght@500&family=VT323&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=VT323&display=swap" rel="stylesheet">
     <script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
     <script src="https://cdn.plot.ly/plotly-latest.min.js"></script>
     <script src="https://d3js.org/d3.v5.min.js"></script>
@@ -35,7 +37,7 @@
                 </ul>
             </div>
         </div>
-        <form id="statsForm" method='post' action='/singleData'>
+        <form id="statsForm">
             <div class="boxes">
                 <div class="box">
                     <div class="inline">
@@ -149,18 +151,30 @@
         });
         document.getElementById('statsForm').addEventListener('submit', function (event) {
             event.preventDefault(); // Prevent the form from submitting normally
-
+            
             // Get form data
-            const fromDate = document.getElementById('fromDate').value;
-            const toDate = document.getElementById('toDate').value;
+            const fromDateInput = document.getElementById('fromDate');
+            const toDateInput = document.getElementById('toDate');
             const stockName = document.getElementById('stockName').value;
 
-            // Fetch data from the endpoint
-            fetch(`/singleData?stockName=${stockName}&fromDate=${fromDate}&toDate=${toDate}`)
-                .then(response => response.json())
+            const fromDate = fromDateInput.value;
+            const toDate = toDateInput.value;
+
+            // If both dates are today, set toDate to today and fromDate to 2 years ago
+            const today = new Date().toISOString().split('T')[0];
+            console.log(today)
+            console.log(fromDate)
+            console.log(toDate)
+            if ((fromDate === today && toDate === today)||(!fromDate && !toDate)) {
+                const twoYearsAgo = new Date();
+                twoYearsAgo.setFullYear(twoYearsAgo.getFullYear() - 2);
+                fromDateInput.value = twoYearsAgo.toISOString().split('T')[0];
+                toDateInput.value = today;
+            }
+            fetch(`/singleData?stockName=${stockName}&fromDate=${fromDateInput.value}&toDate=${toDateInput.value}`)
+            .then(response => response.json())
                 .then(data => {
-                    // Load Google Charts library
-                    //var dates = data.map(entry => entry.Date);
+                    console.log(data);
                     data = JSON.parse(data);
                     console.log(data);
                     var dates = data.map(entry => new Date(entry.Date));
@@ -173,10 +187,37 @@
                         mode: 'lines',
                         name: 'Close Price'
                     };
+                    var selectorOptions = {
+                        buttons: [{
+                            step: 'month',
+                            stepmode: 'backward',
+                            count: 1,
+                            label: '1m'
+                        }, {
+                            step: 'month',
+                            stepmode: 'backward',
+                            count: 6,
+                            label: '6m'
+                        }, {
+                            step: 'year',
+                            stepmode: 'todate',
+                            count: 1,
+                            label: 'YTD'
+                        }, {
+                            step: 'year',
+                            stepmode: 'backward',
+                            count: 1,
+                            label: '1y'
+                        }, {
+                            step: 'all',
+                        }],
+                    };                    
                     var layout = {
                         title: stockName + '\'s Prices Over Time',
                         xaxis: {
-                            title: 'Date'
+                            title: 'Date',
+                            rangeselector: selectorOptions,
+                            rangeslider: {}
                         },
                         yaxis: {
                             title: 'Close Price'
@@ -200,31 +241,7 @@
                 })
                 .catch(error => console.error('Error fetching data:', error));
             });
-            function generateDateRange(startDate, endDate, numPoints) {
-                return d3.time.scale()
-                    .domain([startDate, endDate])
-                    .ticks(numPoints)
-                    .map(date => new Date(date));
-            }
 
-        function drawChart(data) {
-            const chartData = new google.visualization.DataTable();
-            chartData.addColumn('string', 'Date');
-            chartData.addColumn('number', 'Close Price');
-
-            data.forEach(entry => {
-                chartData.addRow([entry.Date, entry.Close]);
-            });
-
-            const options = {
-                title: 'Stock Chart',
-                curveType: 'function',
-                legend: { position: 'bottom' }
-            };
-
-            const chart = new google.visualization.LineChart(document.getElementById('myChart'));
-            chart.draw(chartData, options);
-        }
     </script>
 </body>
 </html>

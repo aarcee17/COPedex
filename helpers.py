@@ -19,13 +19,11 @@ def get_stock_dataN(symbol):
     #stock_profit = soup.find('div', class_='').text
     
     return [stock_name,stock_price,symbol]
-  
 def get_stock_dataNB(symbol):
     url = f"https://www.google.com/finance/quote/{symbol}:NSE"
     response = requests.get(url)
     
     soup = BeautifulSoup(response.content, 'html.parser')
- 
     stock_name = soup.find('div', class_='zzDege').text
     stock_price = soup.find('div', class_='YMlKec fxKbKc').text
     #proloss = soup.find('div', class_='P2Luy Ebnabc ZYVHBb').text
@@ -137,15 +135,6 @@ def plot_stock_filters(symbol, stock_data, selected_filters):
     else:
         print("No data available for the given stock symbol.")
 
-# Example: User input for stock symbol and selected filters
-# user_stock_symbol = input("Enter stock symbol: ") + ".NS"
-# user_selected_filters = input("Enter selected filters (comma-separated, e.g., RSI, Bollinger, VWAP, High, Low, Close, Open, EBITDA, CAPEX): ").split(',')
-# stdate = input("start date: ")
-# enddate = input("end date: ")
-# Fetch and plot stock data with selected filters
-# stock_data = fetch_stock_data(user_stock_symbol,stdate,enddate)
-# print(stock_data)
-
 def filterData(stock_data, user_selected_filters):
     filtered_data = {}
 
@@ -172,7 +161,6 @@ def filterData(stock_data, user_selected_filters):
             filtered_data['CAPEX'] = calculate_capex(stock_data)
         else:
             print(f"Invalid filter option: {filter_option}. Skipping.")
-
     return filtered_data
 
 
@@ -180,9 +168,9 @@ def filterData(stock_data, user_selected_filters):
 def fetch_multiple_stock_data(symbols, st, en):
     stock_data = {}
     
-    for symbol in symbols:
+    for symbol in symbols.split(" "):
         try:
-            data = yf.download(symbol, start=st, end=en, ignore_tz=True)
+            data = yf.download(symbol+'.NS', start=st, end=en, ignore_tz=True)
             stock_data[symbol] = data
         except Exception as e:
             print(f"Error fetching stock data for {symbol}: {e}")
@@ -196,10 +184,8 @@ def plot_multiple_stocks(symbol_data, selected_filters):
         fig = make_subplots(rows=len(selected_filters), cols=1, shared_xaxes=True, subplot_titles=selected_filters)
 
         for i, filter_option in enumerate(selected_filters):
-          
             for symbol, data in symbol_data.items():
                 if data is not None and not data.empty:
-                  
                     if filter_option == 'RSI':
                         filtered_data = calculate_rsi(data)
                     elif filter_option == 'Bollinger':
@@ -237,6 +223,7 @@ def plot_multiple_stocks(symbol_data, selected_filters):
 
     else:
         print("No data available for the given stock symbols.")
+# print(fetch_multiple_stock_data('SBIN CIPLA', '2023-07-22', '2024-01-26'))
         
         
 def get_financial_data(symbol):

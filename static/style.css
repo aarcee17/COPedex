@@ -1,4 +1,6 @@
 /* style.css */
+html, body {margin: 0; height: 100%; overflow: hidden}
+
 body {
     font-family: 'Arial', sans-serif;
     background-color: #f2f2f2;
@@ -15,6 +17,14 @@ body {
     border-radius: 10px;
     box-shadow: 0 0 20px rgba(0, 0, 0, 0.1);
     width: 300px;
+}
+
+#statsForm .box {
+    height: 22vh;
+}
+
+#compareForm .box {
+    height: 22vh;
 }
 
 .login-container h2 {
@@ -295,6 +305,16 @@ hr.solid {
     border-radius: 5px;
 }
 
+#compareForm h3 {
+    margin-top: 1.5vh;
+    font-family: 'Sixtyfour', sans-serif;
+}
+
+#compareForm input {
+    margin-top: -1.9vh;
+    border-radius: 5px;
+}
+
 ::-webkit-datetime-edit-text { color: red; padding: 0 0.3em; }
 ::-webkit-datetime-edit-month-field { color: blue; }
 ::-webkit-datetime-edit-day-field { color: red; }
@@ -317,7 +337,7 @@ hr.solid {
     overflow-y: auto;
     text-align: center;
     width: 18vw;
-    height: 5vh;
+    height: 12vh;
     padding-left: 0;
 }
 
@@ -333,11 +353,50 @@ hr.solid {
     margin-left: 0;
 }
 
+#selectedStocks {
+    margin-left: 0;
+    list-style: none;
+    overflow-x: hidden;
+    overflow-y: auto;
+    text-align: center;
+    width: 18vw;
+    height: 10vh;
+    padding-left: 0;
+}
+
+#selectedStocks li {
+    border: #bbb solid 1px;
+    border-radius: 5px;
+    font-family: 'VT323', monospace;
+    cursor: pointer;
+    font-size: 0.8em;
+}
+
 .stockD .image-divider {
     margin-top: -3.5px;
 }
 
 .filterD .image-divider {
+    margin-top: -3.5px;
+}
+
+.compareD {
+    margin-top: 12vh;
+    margin-bottom: auto;
+    height: 100%;
+}
+
+.aboutD {
+    margin-top: 12vh;
+    margin-bottom: auto;
+    height: 100%;
+}
+
+.aboutD .image-divider {
+    margin-top: -3.5px;
+}
+
+.compareD .image-divider {
     margin-top: -3.5px;
 }
 
@@ -371,8 +430,23 @@ hr.solid {
     margin-top: 3vh;
 }
 
+.chart h2 {
+    margin-top: 0;
+    font-family: 'Pixelify Sans', sans-serif;
+}
+
 #myChart {
     width: 55vw;
-    height: 40vh;
+    height: 42vh;
     border-radius: 15px;
+}
+
+.compareSubmit {
+    position: absolute;
+    margin-bottom: 1vh;
+    margin-left: auto;
+    margin-right: auto;
+    width: 18vw;
+    border: 2px solid #bbb;
+    border-radius: 5px;
 }
