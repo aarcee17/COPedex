@@ -6,8 +6,8 @@ import requests
 from bs4 import BeautifulSoup
 from datetime import datetime, time
 import pytz
-
-
+import numpy as np
+import pandas as pd
 def get_stock_dataN(symbol):
     url = f"https://www.google.com/finance/quote/{symbol}:INDEXNSE"
     response = requests.get(url)
@@ -343,3 +343,31 @@ def get_nifty50cov(filter_choice, range_start, range_end):
     #for key, value in financial_data.items():
      #   print(f"{key}: {value}") 
         
+def puru_data():
+    df = pd.read_csv('ind_nifty50list 2.csv')
+    symbols = df['Symbol']
+
+    opens = []
+    closes = []
+    highs = []
+    lows = []
+
+    for symbol in symbols:
+        
+        ticker = yf.Ticker(symbol+'.NS')
+        info = ticker.history(period='1d')  # Fetch historical data for the last day
+        if not info.empty:
+            opens.append(info['Open'].values[0])
+            closes.append(info['Close'].values[0])
+            highs.append(info['High'].values[0])
+            lows.append(info['Low'].values[0])
+        else:
+            opens.append(np.nan)
+            closes.append(np.nan)
+            highs.append(np.nan)
+            lows.append(np.nan)
+
+        df['Open'] = opens
+        df['Close'] = closes
+        df['High'] = highs
+        df['Low'] = lows        
