@@ -63,6 +63,15 @@
             <div class="news" style="float:left">
                 <h2>News</h2>
                 <hr class="solid">
+                <div class="boxes">
+                    {% for row in news %}
+                        <div class="box">
+                            {% for item in row %}
+                                <h3><a href="{{ item.url }}" target="_blank">{{ item.title }}</a></h3>
+                            {% endfor %}
+                        </div>
+                    {% endfor %}
+                </div>                
             </div>
             <div class="vl"></div>
             <div class="newsletter">
@@ -72,7 +81,7 @@
                     <form id="subscriptionForm">
                         <p>Subscribe to our newsletter to get the latest updates on the stock market!<br></p>
                         <input type="email" name="email" id="email" placeholder="Email"><span><button type="submit" class="button">Subscribe</button></span>
-                        <div id="result">Check</div>
+                        <div id="result"></div>
                     </form>
                 </div>
             </div>

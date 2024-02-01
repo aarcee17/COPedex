@@ -450,3 +450,47 @@ hr.solid {
     border: 2px solid #bbb;
     border-radius: 5px;
 }
+
+.allStocksScroll .boxes {
+    flex-direction: column;
+    justify-content: space-between;
+    margin-top: 2.5vh;
+}
+
+.filterD {
+    margin-top: 12vh;
+    margin-bottom: auto;
+    height: 100%;
+}
+
+.allStocksScroll .box {
+    margin-left: 1vw;
+    margin-top: 1vh;
+    width: 45.5vw;
+    border: 4px solid #c82333;
+}
+
+.allStocksScroll {
+    margin-left: 18vw;
+    margin-top: 3.5vh;
+    height: 84vh;
+    overflow-x: hidden;
+    overflow-y: auto;
+    border: 8px solid #007bff;
+    border-radius: 5px;
+    border-radius: 15px;
+    width: 50vw;
+}
+
+.news .boxes {
+    margin-left: 3vw;
+}
+
+.news .box {
+    overflow-x: hidden;
+    overflow-y: auto;
+}
+
+.news h3 {
+    font-family: 'VT323', monospace;
+}
