@@ -5,9 +5,11 @@ import requests
 from bs4 import BeautifulSoup
 import helpers
 import numpy as np
+import json
 ##################fetching data from Gfinance
 
-#####################end of data fetch functionfrom flask_mail import Mail, Message
+#####################end of data fetch function
+from flask_mail import Mail, Message
 import smtplib
 
 app = Flask(__name__)
@@ -99,8 +101,23 @@ def compareDashboard():
 @app.route('/filter')
 def filterDashboard():
     if 'user_id' in session:
-        
-        return render_template('filterDashboard.html')
+        df = helpers.puru_data()
+        sendstocks = json.loads(df.to_json(orient='records'))
+        for stock in sendstocks:
+            stock['Low'] = round(stock['Low'], 2)
+            stock['Open'] = round(stock['Open'], 2)
+            stock['High'] = round(stock['High'], 2)
+            stock['Close'] = round(stock['Close'], 2)
+        # print(sendstocks)
+        with open('./static/nifty50.csv','r') as F:
+            data = F.readlines()
+        finDataforFilter = []
+        for line in data:
+            line = line.split(',')
+            finDataforFilter.append(helpers.get_financial_data(line[2]))
+        processedFinData = finDataforFilter
+        print(processedFinData)
+        return render_template('filterDashboard.html', stocksData=sendstocks, processedFinData=processedFinData)
     else:
         return redirect(url_for('index'))
 

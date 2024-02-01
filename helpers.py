@@ -7,8 +7,9 @@ from bs4 import BeautifulSoup
 from datetime import datetime, time
 import pytz
 import pandas as pd
-from gnews import GNewsimport 
+from gnews import GNews
 import numpy as np
+from flask import jsonify
 
 def get_stock_dataN(symbol):
     url = f"https://www.google.com/finance/quote/{symbol}:INDEXNSE"
@@ -228,34 +229,6 @@ def plot_multiple_stocks(symbol_data, selected_filters):
 # print(fetch_multiple_stock_data('SBIN CIPLA', '2023-07-22', '2024-01-26'))
         
         
-def get_financial_data(symbol):
-    try:
-        ticker = yf.Ticker(symbol)
-
-        # Get info
-        info = ticker.info
-
-        # List of parameters to extract
-        parameters_to_extract = [
-            'sector', 'longName', 'website', 'marketCap', 'fiftyTwoWeekHigh', 'fiftyTwoWeekLow', 'trailingPE',
-            'forwardPE', 'ebitda', 'priceToBook', 'bookValue', 'debtToEquity', 'trailingEps', 'forwardEps',
-            'dividendYield', 'dividendRate', 'payoutRatio', 'profitMargins', 'operatingMargins', 'returnOnEquity',
-            'returnOnAssets', 'grossMargins', 'currentRatio', 'quickRatio', 'inventoryTurnover', 'revenuePerShare',
-            'altmanZScore', 'interestCoverage', 'beta', 'enterpriseValue', 'enterpriseToEbitda', 'enterpriseToEbit',
-            'priceToSalesTrailing12Months', 'freeCashflow', 'workingCapital'
-        ]
-
-        # Extract relevant financial data
-        financial_data = {param: info.get(param, 'N/A') for param in parameters_to_extract}
-
-        # Filter out 'N/A' values
-        financial_data = {k: v for k, v in financial_data.items() if v != 'N/A'}
-
-        return financial_data
-
-    except Exception as e:
-        print(f"Error fetching financial data for {symbol}: {e}")
-        return None
 
 # Example usage:
 #symbol = 'SBIN.NS'
@@ -287,7 +260,7 @@ def check_market_status():
     
 def get_financial_data(symbol):
     try:
-        ticker = yf.Ticker(symbol)
+        ticker = yf.Ticker(symbol+'.NS')
 
         # Get info
         info = ticker.info
@@ -307,7 +280,7 @@ def get_financial_data(symbol):
 
         # Filter out 'N/A' values
         financial_data = {k: v for k, v in financial_data.items() if v != 'N/A'}
-
+        financial_data['symbol'] = symbol
         return financial_data
 
     except Exception as e:
@@ -352,14 +325,13 @@ def newsMain():
      #   print(f"{key}: {value}") 
         
 def puru_data():
-    df = pd.read_csv('ind_nifty50list 2.csv')
+    df = pd.read_csv('./static/nifty50.csv')
     symbols = df['Symbol']
 
     opens = []
     closes = []
     highs = []
     lows = []
-
     for symbol in symbols:
         
         ticker = yf.Ticker(symbol+'.NS')
@@ -374,8 +346,12 @@ def puru_data():
             closes.append(np.nan)
             highs.append(np.nan)
             lows.append(np.nan)
+    df['Open'] = opens
+    df['Close'] = closes
+    df['High'] = highs
+    df['Low'] = lows        
+    return df
 
-        df['Open'] = opens
-        df['Close'] = closes
-        df['High'] = highs
-        df['Low'] = lows        
+# print(puru_data().to_json(orient='records'))
+
+# print(get_financial_data('SBIN'))

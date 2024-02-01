@@ -10,6 +10,11 @@
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300&display=swap" rel="stylesheet">
     <link href="https://fonts.googleapis.com/css2?family=Sixtyfour&display=swap" rel="stylesheet">
     <link href="https://fonts.googleapis.com/css2?family=Roboto+Mono:wght@300&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Pixelify+Sans:wght@500&family=VT323&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=VT323&display=swap" rel="stylesheet">
+    <script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
+    <script src="https://cdn.plot.ly/plotly-latest.min.js"></script>
+    <script src="https://d3js.org/d3.v5.min.js"></script>
 </head>
 <body>
     <div class="header">
@@ -32,20 +37,306 @@
                 </ul>
             </div>
         </div>
-        <div class="allStocksScroll">
-            <div class="boxes">
-                <div class="box">
+        <div class="divInline">
+            <div class="allStocksScroll">
+                <div class="boxes">
+                    {% for stock in stocksData %}
+                        <div class="box">
+                            <div class="info" style='float:left'> 
+                                <h2>{{ stock.Symbol }}</h2>
+                                <h1>{{ stock["Company Name"]  }}</h1>
+                                <h3>{{ stock.Industry }}</h3>
+                            </div>
+                        </div>
+                    {% endfor %}
                 </div>
-                <div class="box">
-                </div>
-                <div class="box">
-                </div>
-                <div class="box">
-                </div>
-                <div class="box">
-                </div>
+            </div>
+            <div class="listOfFilters">
+                <form id="filterForm">
+                    <div class="box">
+                        <div class="boxInBox">
+                            <h1>Filter</h1>
+                            <hr class="solid bigLine">
+                        </div>
+                        <label for="marketCapFrom">Market Cap (From):</label>
+                        <input type="number" id="marketCapFrom" name="marketCapFrom">
+                        <label for="marketCapTo">Market Cap (To):</label>
+                        <input type="number" id="marketCapTo" name="marketCapTo">
+
+                        <label for="fiftyTwoWeekHighFrom">52-Week High (From):</label>
+                        <input type="number" id="fiftyTwoWeekHighFrom" name="fiftyTwoWeekHighFrom">
+                        <label for="fiftyTwoWeekHighTo">52-Week High (To):</label>
+                        <input type="number" id="fiftyTwoWeekHighTo" name="fiftyTwoWeekHighTo">
+
+                        <label for="fiftyTwoWeekLowFrom">52-Week Low (From):</label>
+                        <input type="number" id="fiftyTwoWeekLowFrom" name="fiftyTwoWeekLowFrom">
+                        <label for="fiftyTwoWeekLowTo">52-Week Low (To):</label>
+                        <input type="number" id="fiftyTwoWeekLowTo" name="fiftyTwoWeekLowTo">
+
+                        <label for="trailingPEFrom">Trailing P/E (From):</label>
+                        <input type="number" id="trailingPEFrom" name="trailingPEFrom">
+                        <label for="trailingPETo">Trailing P/E (To):</label>
+                        <input type="number" id="trailingPETo" name="trailingPETo">
+
+                        <label for="ebitdaFrom">EBITDA (From):</label>
+                        <input type="number" id="ebitdaFrom" name="ebitdaFrom">
+                        <label for="ebitdaTo">EBITDA (To):</label>
+                        <input type="number" id="ebitdaTo" name="ebitdaTo">
+
+                        <label for="priceToBookFrom">Price to Book (From):</label>
+                        <input type="number" id="priceToBookFrom" name="priceToBookFrom">
+                        <label for="priceToBookTo">Price to Book (To):</label>
+                        <input type="number" id="priceToBookTo" name="priceToBookTo">
+
+                        <label for="bookValueFrom">Book Value (From):</label>
+                        <input type="number" id="bookValueFrom" name="bookValueFrom">
+                        <label for="bookValueTo">Book Value (To):</label>
+                        <input type="number" id="bookValueTo" name="bookValueTo">
+
+                        <label for="debtToEquityFrom">Debt to Equity (From):</label>
+                        <input type="number" id="debtToEquityFrom" name="debtToEquityFrom">
+                        <label for="debtToEquityTo">Debt to Equity (To):</label>
+                        <input type="number" id="debtToEquityTo" name="debtToEquityTo">
+
+                        <label for="trailingEpsFrom">Trailing EPS (From):</label>
+                        <input type="number" id="trailingEpsFrom" name="trailingEpsFrom">
+                        <label for="trailingEpsTo">Trailing EPS (To):</label>
+                        <input type="number" id="trailingEpsTo" name="trailingEpsTo">
+
+                        <label for="forwardEpsFrom">Forward EPS (From):</label>
+                        <input type="number" id="forwardEpsFrom" name="forwardEpsFrom">
+                        <label for="forwardEpsTo">Forward EPS (To):</label>
+                        <input type="number" id="forwardEpsTo" name="forwardEpsTo">
+
+                        <label for="dividendYieldFrom">Dividend Yield (From):</label>
+                        <input type="number" id="dividendYieldFrom" name="dividendYieldFrom">
+                        <label for="dividendYieldTo">Dividend Yield (To):</label>
+                        <input type="number" id="dividendYieldTo" name="dividendYieldTo">
+
+                        <label for="dividendRateFrom">Dividend Rate (From):</label>
+                        <input type="number" id="dividendRateFrom" name="dividendRateFrom">
+                        <label for="dividendRateTo">Dividend Rate (To):</label>
+                        <input type="number" id="dividendRateTo" name="dividendRateTo">
+
+                        <label for="payoutRatioFrom">Payout Ratio (From):</label>
+                        <input type="number" id="payoutRatioFrom" name="payoutRatioFrom">
+                        <label for="payoutRatioTo">Payout Ratio (To):</label>
+                        <input type="number" id="payoutRatioTo" name="payoutRatioTo">
+
+                        <label for="profitMarginsFrom">Profit Margins (From):</label>
+                        <input type="number" id="profitMarginsFrom" name="profitMarginsFrom">
+                        <label for="profitMarginsTo">Profit Margins (To):</label>
+                        <input type="number" id="profitMarginsTo" name="profitMarginsTo">
+
+                        <label for="operatingMarginsFrom">Operating Margins (From):</label>
+                        <input type="number" id="operatingMarginsFrom" name="operatingMarginsFrom">
+                        <label for="operatingMarginsTo">Operating Margins (To):</label>
+                        <input type="number" id="operatingMarginsTo" name="operatingMarginsTo">
+
+                        <label for="returnOnEquityFrom">Return on Equity (From):</label>
+                        <input type="number" id="returnOnEquityFrom" name="returnOnEquityFrom">
+                        <label for="returnOnEquityTo">Return on Equity (To):</label>
+                        <input type="number" id="returnOnEquityTo" name="returnOnEquityTo">
+
+                        <label for="returnOnAssetsFrom">Return on Assets (From):</label>
+                        <input type="number" id="returnOnAssetsFrom" name="returnOnAssetsFrom">
+                        <label for="returnOnAssetsTo">Return on Assets (To):</label>
+                        <input type="number" id="returnOnAssetsTo" name="returnOnAssetsTo">
+
+                        <label for="grossMarginsFrom">Gross Margins (From):</label>
+                        <input type="number" id="grossMarginsFrom" name="grossMarginsFrom">
+                        <label for="grossMarginsTo">Gross Margins (To):</label>
+                        <input type="number" id="grossMarginsTo" name="grossMarginsTo">
+
+                        <label for="currentRatioFrom">Current Ratio (From):</label>
+                        <input type="number" id="currentRatioFrom" name="currentRatioFrom">
+                        <label for="currentRatioTo">Current Ratio (To):</label>
+                        <input type="number" id="currentRatioTo" name="currentRatioTo">
+
+                        <label for="quickRatioFrom">Quick Ratio (From):</label>
+                        <input type="number" id="quickRatioFrom" name="quickRatioFrom">
+                        <label for="quickRatioTo">Quick Ratio (To):</label>
+                        <input type="number" id="quickRatioTo" name="quickRatioTo">
+
+                        <label for="revenuePerShareFrom">Revenue Per Share (From):</label>
+                        <input type="number" id="revenuePerShareFrom" name="revenuePerShareFrom">
+                        <label for="revenuePerShareTo">Revenue Per Share (To):</label>
+                        <input type="number" id="revenuePerShareTo" name="revenuePerShareTo">
+
+                        <label for="betaFrom">Beta (From):</label>
+                        <input type="number" id="betaFrom" name="betaFrom">
+                        <label for="betaTo">Beta (To):</label>
+                        <input type="number" id="betaTo" name="betaTo">
+
+                        <label for="enterpriseValueFrom">Enterprise Value (From):</label>
+                        <input type="number" id="enterpriseValueFrom" name="enterpriseValueFrom">
+                        <label for="enterpriseValueTo">Enterprise Value (To):</label>
+                        <input type="number" id="enterpriseValueTo" name="enterpriseValueTo">
+
+                        <label for="enterpriseToEbitdaFrom">Enterprise to EBITDA (From):</label>
+                        <input type="number" id="enterpriseToEbitdaFrom" name="enterpriseToEbitdaFrom">
+                        <label for="enterpriseToEbitdaTo">Enterprise to EBITDA (To):</label>
+                        <input type="number" id="enterpriseToEbitdaTo" name="enterpriseToEbitdaTo">
+
+                        <label for="priceToSalesTrailing12MonthsFrom">Price to Sales (Trailing 12 Months) (From):</label>
+                        <input type="number" id="priceToSalesTrailing12MonthsFrom" name="priceToSalesTrailing12MonthsFrom">
+                        <label for="priceToSalesTrailing12MonthsTo">Price to Sales (Trailing 12 Months) (To):</label>
+                        <input type="number" id="priceToSalesTrailing12MonthsTo" name="priceToSalesTrailing12MonthsTo">
+
+                        <label for="freeCashflowFrom">Free Cashflow (From):</label>
+                        <input type="number" id="freeCashflowFrom" name="freeCashflowFrom">
+                        <label for="freeCashflowTo">Free Cashflow (To):</label>
+                        <input type="number" id="freeCashflowTo" name="freeCashflowTo">
+
+                        <button type="submit" onclick="filter(event)" class="fixedBtn">Filter</button>
+                    </div>
+                </form>
             </div>
         </div>
     </main>
+    <script>
+        var processedFinData = JSON.parse('{{ processedFinData | tojson | safe }}');
+            console.log(processedFinData);
+        function filter(event) {
+            //processedFinData contains the stock data and we need to find the stocks that satisfy the filtering criteria
+            event.preventDefault();
+            var filteredData = [];
+            var marketCapFrom = document.getElementById("marketCapFrom").value;
+            var marketCapTo = document.getElementById("marketCapTo").value;
+            var fiftyTwoWeekHighFrom = document.getElementById("fiftyTwoWeekHighFrom").value;
+            var fiftyTwoWeekHighTo = document.getElementById("fiftyTwoWeekHighTo").value;
+            var fiftyTwoWeekLowFrom = document.getElementById("fiftyTwoWeekLowFrom").value;
+            var fiftyTwoWeekLowTo = document.getElementById("fiftyTwoWeekLowTo").value;
+            var trailingPEFrom = document.getElementById("trailingPEFrom").value;
+            var trailingPETo = document.getElementById("trailingPETo").value;
+            var ebitdaFrom = document.getElementById("ebitdaFrom").value;
+            var ebitdaTo = document.getElementById("ebitdaTo").value;
+            var priceToBookFrom = document.getElementById("priceToBookFrom").value;
+            var priceToBookTo = document.getElementById("priceToBookTo").value;
+            var bookValueFrom = document.getElementById("bookValueFrom").value;
+            var bookValueTo = document.getElementById("bookValueTo").value;
+            var debtToEquityFrom = document.getElementById("debtToEquityFrom").value;
+            var debtToEquityTo = document.getElementById("debtToEquityTo").value;
+            var trailingEpsFrom = document.getElementById("trailingEpsFrom").value;
+            var trailingEpsTo = document.getElementById("trailingEpsTo").value;
+            var forwardEpsFrom = document.getElementById("forwardEpsFrom").value;
+            var forwardEpsTo = document.getElementById("forwardEpsTo").value;
+            var dividendYieldFrom = document.getElementById("dividendYieldFrom").value;
+            var dividendYieldTo = document.getElementById("dividendYieldTo").value;
+            var dividendRateFrom = document.getElementById("dividendRateFrom").value;
+            var dividendRateTo = document.getElementById("dividendRateTo").value;
+            var payoutRatioFrom = document.getElementById("payoutRatioFrom").value;
+            var payoutRatioTo = document.getElementById("payoutRatioTo").value;
+            var profitMarginsFrom = document.getElementById("profitMarginsFrom").value;
+            var profitMarginsTo = document.getElementById("profitMarginsTo").value;
+            var operatingMarginsFrom = document.getElementById("operatingMarginsFrom").value;
+            var operatingMarginsTo = document.getElementById("operatingMarginsTo").value;
+            var returnOnEquityFrom = document.getElementById("returnOnEquityFrom").value;
+            var returnOnEquityTo = document.getElementById("returnOnEquityTo").value;
+            var returnOnAssetsFrom = document.getElementById("returnOnAssetsFrom").value;
+            var returnOnAssetsTo = document.getElementById("returnOnAssetsTo").value;
+            var grossMarginsFrom = document.getElementById("grossMarginsFrom").value;
+            var grossMarginsTo = document.getElementById("grossMarginsTo").value;
+            var currentRatioFrom = document.getElementById("currentRatioFrom").value;
+            var currentRatioTo = document.getElementById("currentRatioTo").value;
+            var quickRatioFrom = document.getElementById("quickRatioFrom").value;
+            var quickRatioTo = document.getElementById("quickRatioTo").value;
+            var revenuePerShareFrom = document.getElementById("revenuePerShareFrom").value;
+            var revenuePerShareTo = document.getElementById("revenuePerShareTo").value;
+            var betaFrom = document.getElementById("betaFrom").value;
+            var betaTo = document.getElementById("betaTo").value;
+            var enterpriseValueFrom = document.getElementById("enterpriseValueFrom").value;
+            var enterpriseValueTo = document.getElementById("enterpriseValueTo").value;
+            var enterpriseToEbitdaFrom = document.getElementById("enterpriseToEbitdaFrom").value;
+            var enterpriseToEbitdaTo = document.getElementById("enterpriseToEbitdaTo").value;
+            var priceToSalesTrailing12MonthsFrom = document.getElementById("priceToSalesTrailing12MonthsFrom").value;
+            var priceToSalesTrailing12MonthsTo = document.getElementById("priceToSalesTrailing12MonthsTo").value;
+            var freeCashflowFrom = document.getElementById("freeCashflowFrom").value;
+            var freeCashflowTo = document.getElementById("freeCashflowTo").value;
+            for (var i = 1; i < processedFinData.length; i++) {
+                var stock = processedFinData[i];
+                console.log(stock);
+                console.log(marketCapFrom);
+                if((marketCapFrom === "" ||stock.marketCap===""|| stock.marketCap  >= marketCapFrom) &&
+                (marketCapTo === "" || stock.marketCap==="" ||stock.marketCap  <= (marketCapTo || 0)) &&
+                (fiftyTwoWeekHighFrom === "" || stock.fiftyTwoWeekHigh==="" ||stock.fiftyTwoWeekHigh  >= fiftyTwoWeekHighFrom) &&
+                (fiftyTwoWeekHighTo === "" || stock.fiftyTwoWeekHigh==="" ||stock.fiftyTwoWeekHigh  <= (fiftyTwoWeekHighTo || 0)) &&
+                (fiftyTwoWeekLowFrom === "" || stock.fiftyTwoWeekLow==="" ||stock.fiftyTwoWeekLow  >= fiftyTwoWeekLowFrom) && 
+                (fiftyTwoWeekLowTo === "" || stock.fiftyTwoWeekLow==="" ||stock.fiftyTwoWeekLow  <= (fiftyTwoWeekLowTo || 0)) &&
+                (trailingPEFrom === "" || stock.trailingPE==="" ||stock.trailingPE  >= trailingPEFrom) &&
+                (trailingPETo === "" || stock.trailingPE==="" ||stock.trailingPE  <= (trailingPETo || 0)) &&
+                (ebitdaFrom === "" || stock.ebitda==="" ||stock.ebitda  >= ebitdaFrom) &&
+                (ebitdaTo === "" || stock.ebitda==="" ||stock.ebitda  <= (ebitdaTo || 0)) &&
+                (priceToBookFrom === "" || stock.priceToBook==="" ||stock.priceToBook  >= priceToBookFrom) &&
+                (priceToBookTo === "" || stock.priceToBook==="" ||stock.priceToBook  <= (priceToBookTo || 0)) &&
+                (bookValueFrom === "" || stock.bookValue==="" ||stock.bookValue  >= bookValueFrom) &&
+                (bookValueTo === "" || stock.bookValue==="" ||stock.bookValue  <= (bookValueTo || 0)) &&
+                (debtToEquityFrom === "" || stock.debtToEquity==="" ||stock.debtToEquity  >= debtToEquityFrom) &&
+                (debtToEquityTo === "" || stock.debtToEquity==="" ||stock.debtToEquity  <= (debtToEquityTo || 0)) &&
+                (trailingEpsFrom === "" || stock.trailingEps==="" ||stock.trailingEps  >= trailingEpsFrom) &&
+                (trailingEpsTo === "" || stock.trailingEps==="" ||stock.trailingEps  <= (trailingEpsTo || 0)) &&
+                (dividendYieldFrom === "" || stock.dividendYield==="" ||stock.dividendYield  >= dividendYieldFrom) &&
+                (dividendYieldTo === "" || stock.dividendYield==="" ||stock.dividendYield  <= (dividendYieldTo || 0)) &&
+                (dividendRateFrom === "" || stock.dividendRate==="" ||stock.dividendRate  >= dividendRateFrom) &&
+                (dividendRateTo === "" || stock.dividendRate==="" ||stock.dividendRate  <= (dividendRateTo || 0)) &&
+                (payoutRatioFrom === "" || stock.payoutRatio==="" ||stock.payoutRatio  >= payoutRatioFrom) &&
+                (payoutRatioTo === "" || stock.payoutRatio==="" ||stock.payoutRatio  <= (payoutRatioTo || 0)) &&
+                (profitMarginsFrom === "" || stock.profitMargins==="" ||stock.profitMargins  >= profitMarginsFrom) &&
+                (profitMarginsTo === "" || stock.profitMargins==="" ||stock.profitMargins  <= (profitMarginsTo || 0)) &&
+                (operatingMarginsFrom === "" || stock.operatingMargins==="" ||stock.operatingMargins  >= operatingMarginsFrom) &&
+                (operatingMarginsTo === "" || stock.operatingMargins==="" ||stock.operatingMargins  <= (operatingMarginsTo || 0)) &&
+                (returnOnEquityFrom === "" || stock.returnOnEquity==="" ||stock.returnOnEquity  >= returnOnEquityFrom) &&
+                (returnOnEquityTo === "" || stock.returnOnEquity==="" ||stock.returnOnEquity  <= (returnOnEquityTo || 0)) &&
+                (returnOnAssetsFrom === "" || stock.returnOnAssets==="" ||stock.returnOnAssets  >= returnOnAssetsFrom) &&
+                (returnOnAssetsTo === "" || stock.returnOnAssets==="" ||stock.returnOnAssets  <= (returnOnAssetsTo || 0)) &&
+                (grossMarginsFrom === "" || stock.grossMargins==="" ||stock.grossMargins  >= grossMarginsFrom) &&
+                (grossMarginsTo === "" || stock.grossMargins==="" ||stock.grossMargins  <= (grossMarginsTo || 0)) &&
+                (currentRatioFrom === "" || stock.currentRatio==="" ||stock.currentRatio  >= currentRatioFrom) &&
+                (currentRatioTo === "" || stock.currentRatio==="" ||stock.currentRatio  <= (currentRatioTo || 0)) &&
+                (quickRatioFrom === "" || stock.quickRatio==="" ||stock.quickRatio  >= quickRatioFrom) &&
+                (quickRatioTo === "" || stock.quickRatio==="" ||stock.quickRatio  <= (quickRatioTo || 0)) &&
+                (revenuePerShareFrom === "" || stock.revenuePerShare==="" ||stock.revenuePerShare  >= revenuePerShareFrom) &&
+                (revenuePerShareTo === "" || stock.revenuePerShare==="" ||stock.revenuePerShare  <= (revenuePerShareTo || 0)) &&
+                (betaFrom === "" || stock.beta==="" ||stock.beta  >= betaFrom) &&
+                (betaTo === "" || stock.beta==="" ||stock.beta  <= (betaTo || 0)) &&
+                (enterpriseValueFrom === "" || stock.enterpriseValue==="" ||stock.enterpriseValue  >= enterpriseValueFrom) &&
+                (enterpriseValueTo === "" || stock.enterpriseValue==="" ||stock.enterpriseValue  <= (enterpriseValueTo || 0)) &&
+                (enterpriseToEbitdaFrom === "" || stock.enterpriseToEbitda==="" ||stock.enterpriseToEbitda  >= enterpriseToEbitdaFrom) &&
+                (enterpriseToEbitdaTo === "" || stock.enterpriseToEbitda==="" ||stock.enterpriseToEbitda  <= (enterpriseToEbitdaTo || 0)) &&
+                (priceToSalesTrailing12MonthsFrom === "" || stock.priceToSalesTrailing12Months==="" ||stock.priceToSalesTrailing12Months  >= priceToSalesTrailing12MonthsFrom) &&
+                (priceToSalesTrailing12MonthsTo === "" || stock.priceToSalesTrailing12Months==="" ||stock.priceToSalesTrailing12Months  <= (priceToSalesTrailing12MonthsTo || 0)) &&
+                (freeCashflowFrom === "" || stock.freeCashflow==="" ||stock.freeCashflow  >= freeCashflowFrom) &&
+                (freeCashflowTo === "" || stock.freeCashflow==="" ||stock.freeCashflow  <= (freeCashflowTo || 0))
+                ){
+                    filteredData.push(stock);
+                }
+                if(marketCapFrom==="")
+                {
+                    console.log("billo");
+                }
+            }
+            console.log(filteredData);
+            var allStocksScrollDiv = document.querySelector('.allStocksScroll .boxes');
+    // Clear existing content
+            allStocksScrollDiv.innerHTML = '';
+
+            for (var i = 0; i < filteredData.length; i++) {
+                var stock = filteredData[i];
+                // Build the HTML content for each stock
+                var stockHTML = `
+                    <div class="box">
+                        <div class="info" style='float:left'> 
+                            <h2>${stock.symbol}</h2>
+                            <h1>${stock.longName}</h1>
+                            <h3>${stock.sector}</h3>
+                        </div>
+                    </div>`;
+                // Append the stock HTML to the allStocksScroll div
+                allStocksScrollDiv.innerHTML += stockHTML;
+            }
+        }
+            
+            
+    </script>
 </body>
 </html>

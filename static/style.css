@@ -130,6 +130,14 @@ main{
     font-family: 'Sixtyfour', sans-serif;
 }
 
+.news h2{
+    font-family: 'Sixtyfour', sans-serif;
+}
+
+.allStocksScroll h2 {
+    font-family: 'Sixtyfour', sans-serif;
+}
+
 .toolArea h2 {
     font-family: 'Sixtyfour', sans-serif;
 }
@@ -242,8 +250,23 @@ hr.solid {
     font-family: 'Pixelify Sans', sans-serif;
 }
 
+.allStocksScroll h1 {
+    margin-top: -1vh;
+    font-family: 'Pixelify Sans', sans-serif;
+    font-size: 1.4em;
+}
+
+.allStocksScroll h2 {
+    margin-top: 3.5vh;
+}
+
+
 .indexArea .box h3 {
     margin-top: 0;
+    font-family: 'VT323', monospace;
+}
+
+.allStocksScroll h3{
     font-family: 'VT323', monospace;
 }
 
@@ -471,7 +494,7 @@ hr.solid {
 }
 
 .allStocksScroll {
-    margin-left: 18vw;
+    margin-left: 1vw;
     margin-top: 3.5vh;
     height: 84vh;
     overflow-x: hidden;
@@ -493,4 +516,75 @@ hr.solid {
 
 .news h3 {
     font-family: 'VT323', monospace;
+}
+
+.params {
+    display: flex;
+    flex-direction: column;
+    margin-bottom: 1vh;
+    margin-top: -3vh;
+}
+
+.allStocksScroll h3{
+    position: relative;
+    margin-bottom: 0vh;
+}
+
+/* .allStocksScroll .box {
+    display: inline;
+} */
+
+.listOfFilters .box {
+    margin-top: 3.5vh;
+    margin-left: 1.5vw;
+    height: 82vh;
+    width: 22vw;
+    overflow-x: hidden;
+    overflow-y: auto;
+    border: #c82333 solid 4px;
+}
+
+.divInline {
+    display: flex;
+    flex-direction: row;
+}
+
+.listOfFilters .box h1 {
+    margin-top: 0;
+    top: 0;
+    font-family: 'Pixelify Sans', sans-serif;
+    position: sticky;
+}
+
+hr.bigLine {
+    width: 15vw;
+    position: sticky;
+    top: 6vh;
+}
+
+.fixedBtn {
+    bottom: 0;
+    right: 0;
+    position: sticky;
+    height: 4vh;
+    border: #bbb solid 2px;
+    border-radius: 5px;
+}
+
+#filterForm .box {
+    display: flex;
+    flex-direction: column;
+}
+
+.boxInBox {
+    width: 23vw;
+    height: 8vh;
+    background-color: #f2f2f2;
+    box-shadow: 0 0 20px rgba(0, 0, 0, 0.1);
+    padding: 10px;
+    position: sticky;
+    top: -2vh;
+    margin-left: -1vw;
+    z-index: 5;
+    margin-top: -2vh;
 }

@@ -8,3 +8,4 @@
 8) Parameters to be taken: +- returns/day, sharpe, 
 9) newsletter : from the collection of 30 research papers
 10) news : Gfinance extractable
+11) Mention that to show advantage of API over jugaad-data/scraping, we have used scraping on the first page which is super slow

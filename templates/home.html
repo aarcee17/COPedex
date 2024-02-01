@@ -66,6 +66,11 @@
                 <div class="boxes">
                     {% for row in news %}
                         <div class="box">
+                            {% if loop.index==1 %}
+                                <h2>NSE</h2>
+                            {% else %}
+                                <h2>BSE</h2>
+                            {% endif %}
                             {% for item in row %}
                                 <h3><a href="{{ item.url }}" target="_blank">{{ item.title }}</a></h3>
                             {% endfor %}
