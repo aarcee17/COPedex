@@ -10,6 +10,11 @@
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300&display=swap" rel="stylesheet">
     <link href="https://fonts.googleapis.com/css2?family=Sixtyfour&display=swap" rel="stylesheet">
     <link href="https://fonts.googleapis.com/css2?family=Roboto+Mono:wght@300&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Pixelify+Sans:wght@500&family=VT323&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=VT323&display=swap" rel="stylesheet">
+    <script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
+    <script src="https://cdn.plot.ly/plotly-latest.min.js"></script>
+    <script src="https://d3js.org/d3.v5.min.js"></script>
 </head>
 <body>
     <div class="header">
@@ -19,5 +24,263 @@
             <li style="float:right" class="profile">Stock Dashboard<img src={{url_for('static', filename='user.svg')}}></li>
         </ul>
     </div>
+    <main class="compareD">
+        <img class="image-divider" src="https://s3-us-west-2.amazonaws.com/s.cdpn.io/101448/wedding-divider-png-9.png" />
+        <div class="sideBar" style="float:left">
+            <div class="box">
+                <ul>
+                    <li><a href="/dashboard">Dashboard</a></li>
+                    <li><a href="/stats">Stats</a></li>
+                    <li class="active"><a href="/compare">Arena</a></li>
+                    <li><a href="/filter">Oak's Lab</a></li>
+                    <li><a href="/about">About</a></li>
+                </ul>
+            </div>
+        </div>
+        <form id="compareForm">
+            <div class="boxes">
+                <div class="box">
+                    <div class="inline">
+                        <h3>From Date</h3>
+                        <input type="date" name="fromDate" id="fromDate">
+                    </div>
+                    <div class="inline">
+                        <h3>To Date</h3>
+                        <input type="date" name="toDate" id="toDate">
+                    </div>
+                </div>
+                <div class="box">
+                    <h3>Stock Name</h3>
+                    <input type="text" name="stockName" id="stockName">
+                    <div class="stockSearchOut">
+                        <ul id="stockList">
+                            <ul id="stockList">
+                                <li>Asian Paints Ltd (ASIANPAINT)</li>
+                                <li>Britannia Industries Ltd (BRITANNIA)</li>
+                                <li>Cipla Ltd (CIPLA)</li>
+                                <li>Eicher Motors Ltd (EICHERMOT)</li>
+                                <li>Nestle India Ltd (NESTLEIND)</li>
+                                <li>Grasim Industries Ltd (GRASIM)</li>
+                                <li>Hero MotoCorp Ltd (HEROMOTOCO)</li>
+                                <li>Hindalco Industries Ltd (HINDALCO)</li>
+                                <li>Hindustan Unilever Ltd (HINDUNILVR)</li>
+                                <li>ITC Ltd (ITC)</li>
+                                <li>Larsen & Toubro Ltd (LT)</li>
+                                <li>Mahindra & Mahindra Ltd (M&M)</li>
+                                <li>Reliance Industries Ltd (RELIANCE)</li>
+                                <li>Tata Consumer Products Ltd (TATACONSUM)</li>
+                                <li>Tata Motors Ltd (TATAMOTORS)</li>
+                                <li>Tata Steel Ltd (TATASTEEL)</li>
+                                <li>Wipro Ltd (WIPRO)</li>
+                                <li>Apollo Hospitals Enterprise Ltd (APOLLOHOSP)</li>
+                                <li>Dr Reddys Laboratories Ltd (DRREDDY)</li>
+                                <li>Titan Company Ltd (TITAN)</li>
+                                <li>State Bank of India (SBIN)</li>
+                                <li>Bharat Petroleum Corporation Ltd (BPCL)</li>
+                                <li>Kotak Mahindra Bank Ltd (KOTAKBANK)</li>
+                                <li>UPL Ltd (UPL)</li>
+                                <li>Infosys Ltd (INFY)</li>
+                                <li>Bajaj Finance Ltd (BAJFINANCE)</li>
+                                <li>Adani Enterprises Ltd (ADANIENT)</li>
+                                <li>Sun Pharmaceuticals Industries Ltd (SUNPHARMA)</li>
+                                <li>JSW Steel Ltd (JSWSTEEL)</li>
+                                <li>HDFC Bank Ltd (HDFCBANK)</li>
+                                <li>Tata Consultancy Services Ltd (TCS)</li>
+                                <li>ICICI Bank Ltd (ICICIBANK)</li>
+                                <li>Power Grid Corporation of India Ltd (POWERGRID)</li>
+                                <li>Maruti Suzuki India Ltd (MARUTI)</li>
+                                <li>IndusInd Bank Ltd (INDUSINDBK)</li>
+                                <li>Axis Bank Ltd (AXISBANK)</li>
+                                <li>HCL Technologies Ltd (HCLTECH)</li>
+                                <li>Oil & Natural Gas Corpn Ltd (ONGC)</li>
+                                <li>NTPC Ltd (NTPC)</li>
+                                <li>Coal India Ltd (COALINDIA)</li>
+                                <li>Bharti Airtel Ltd (BHARTIARTL)</li>
+                                <li>Tech Mahindra Ltd (TECHM)</li>
+                                <li>LTIMindtree Ltd (LTIM)</li>
+                                <li>Divis Laboratories Ltd (DIVISLAB)</li>
+                                <li>Adani Ports & Special Economic Zone Ltd (ADANIPORTS)</li>
+                                <li>HDFC Life Insurance Company Ltd (HDFCLIFE)</li>
+                                <li>SBI Life Insurance Company Ltd (SBILIFE)</li>
+                                <li>UltraTech Cement Ltd (ULTRACEMCO)</li>
+                                <li>Bajaj Auto Ltd (BAJAJ-AUTO)</li>
+                                <li>Bajaj Finserv Ltd (BAJAJFINSV)</li>
+                            </ul>
+                        </ul>
+                    </div>
+                </div>
+                <div class="box">
+                    <h3>Selected Stocks</h3>
+                    <ul id="selectedStocks"></ul>
+                    <button type="submit" class="button compareSubmit" id="submitBtn">Submit</button>
+                </div>
+            </div>
+        </form>
+        <div class="chart">
+            <div class="box">
+                <h2>Comparison Chart</h2>
+                <div id="myChart"></div>
+            </div>
+        </div>
+    </main>
+    <script>
+        const selectedStocksSet = new Set();
+        document.getElementById('stockName').addEventListener('input', function (event) {
+            const searchTerm = event.target.value.toLowerCase();
+            const listItems = document.querySelectorAll('#stockList li');
+
+            listItems.forEach(function (item) {
+                const itemText = item.textContent.toLowerCase();
+
+                if (itemText.includes(searchTerm)) {
+                    item.style.display = 'list-item';
+                } else {
+                    item.style.display = 'none';
+                }
+            });
+        });
+
+        document.addEventListener("DOMContentLoaded", function () {
+            const stockList = document.getElementById("stockList");
+            const stockNameInput = document.getElementById("stockName");
+            const selectedStocksList = document.getElementById("selectedStocks");
+
+            stockList.addEventListener("click", function (event) {
+                if (event.target.tagName === "LI") {
+                    const selectedStockSymbol = event.target.textContent.trim().split(' ').pop().replace(/[()]/g, '');
+
+                    if (!selectedStocksSet.has(selectedStockSymbol)) {
+                        const listItem = document.createElement("li");
+                        listItem.textContent = selectedStockSymbol;
+
+                        const removeButton = document.createElement("button");
+                        removeButton.textContent = "Remove";
+                        removeButton.addEventListener("click", function () {
+                            listItem.remove();
+                            selectedStocksSet.delete(selectedStockSymbol);
+                        });
+
+                        listItem.appendChild(removeButton);
+                        selectedStocksList.appendChild(listItem);
+                        selectedStocksSet.add(selectedStockSymbol);
+                        stockNameInput.value = ""; // Clear the input field
+                    }
+                }
+            });
+        });
+        document.getElementById('compareForm').addEventListener('submit', function (event) {
+            event.preventDefault(); // Prevent the form from submitting normally
+
+    // Get form data
+    const fromDateInput = document.getElementById('fromDate');
+    const toDateInput = document.getElementById('toDate');
+
+    const fromDate = fromDateInput.value;
+    const toDate = toDateInput.value;
+
+    // If both dates are today, set toDate to today and fromDate to 1 year ago
+    const today = new Date().toISOString().split('T')[0];
+
+    if ((fromDate === today && toDate === today) || (!fromDate && !toDate)) {
+        const oneYearAgo = new Date();
+        oneYearAgo.setFullYear(oneYearAgo.getFullYear() - 1);
+        fromDateInput.value = oneYearAgo.toISOString().split('T')[0];
+        toDateInput.value = today;
+    }
+    var stocksName = "";
+    for (const stock of selectedStocksSet) {
+        stocksName += stock + " ";
+    }
+    stocksName = stocksName.trim();
+
+    fetch(`/multiData?stocksNames=${stocksName}&fromDate=${fromDateInput.value}&toDate=${toDateInput.value}`)
+        .then(response => response.json())
+        .then(data => {
+            const parsedData = data.map(jsonString => JSON.parse(jsonString));
+            data = parsedData;
+            console.log(parsedData);
+
+            // Process data for plotting (similar to your existing code)
+            // ...
+            
+            var traces = []; // Array to hold traces for each stock
+            var i = 0;
+            const stocksArray = stocksName.split(' ');
+            parsedData.forEach(stockData =>{
+                var closePrices = data[i].map(entry => entry.Close);
+                var openPrices = data[i].map(entry => entry.Open);
+                var dates = data[i].map(entry => new Date(entry.Date));
+                console.log(dates);
+                console.log(closePrices);
+                
+                var trace = {
+                    x: dates, // Make sure 'dates' is available in your code
+                    y: closePrices,
+                    type: 'scatter',
+                    mode: 'lines',
+                    name: `${stocksArray[i]} Close Price`
+                };
+
+                var traceOpen = {
+                    x: dates, // Make sure 'dates' is available in your code
+                    y: openPrices,
+                    type: 'scatter',
+                    mode: 'lines',
+                    name: `${stocksArray[i]} Open Price`
+                };
+                i += 1;
+                traces.push(trace);
+            });
+
+            var selectorOptions = {
+                buttons: [{
+                    step: 'month',
+                    stepmode: 'backward',
+                    count: 1,
+                    label: '1m'
+                }, {
+                    step: 'month',
+                    stepmode: 'backward',
+                    count: 6,
+                    label: '6m'
+                }, {
+                    step: 'year',
+                    stepmode: 'todate',
+                    count: 1,
+                    label: 'YTD'
+                }, {
+                    step: 'year',
+                    stepmode: 'backward',
+                    count: 1,
+                    label: '1y'
+                }, {
+                    step: 'all',
+                }],
+            };
+
+            var layout = {
+                title: `Comparison Over Time`,
+                xaxis: {
+                    title: 'Date',
+                    rangeselector: selectorOptions,
+                    rangeslider: {}
+                },
+                yaxis: {
+                    title: 'Close Price'
+                },
+                font: {
+                    family: 'VT323, monospace',
+                    size: 14,
+                    color: '#7f7f7f'
+                }
+            };
+
+            // Create the plot with all traces
+            Plotly.newPlot('myChart', traces, layout);
+        })
+        .catch(error => console.error('Error fetching data:', error));
+    });
+        
+    </script>
 </body>
 </html>

@@ -31,15 +31,6 @@ with app.app_context():
 def index():
     return render_template('login.html')
 
-@app.route('/singleData', methods = ['GET'])
-def fetchDataSingle():
-    print("meow")
-    stock_data = helpers.fetch_stock_data(request.args.get('stockName')+'.NS', request.args.get('fromDate'), request.args.get('toDate'))
-    stock_data.reset_index(inplace=True)
-    print(stock_data)
-    if stock_data is not None:
-        stock_data_json = stock_data.to_json(orient='records')
-        return jsonify(stock_data_json)
 
 @app.route('/register', methods=['GET', 'POST'])
 def register():
@@ -119,7 +110,36 @@ def send_mail():
 
     return jsonify(message=response_message)
 
+@app.route('/about')
+def aboutDashboard():
+    if 'user_id' in session:
+        return render_template('about.html')
+    else:
+        return redirect(url_for('index'))
 
+@app.route('/singleData', methods = ['GET'])
+def fetchDataSingle():
+    stock_data = helpers.fetch_stock_data(request.args.get('stockName')+'.NS', request.args.get('fromDate'), request.args.get('toDate'))
+    stock_data.reset_index(inplace=True)
+    print(stock_data)
+    if stock_data is not None:
+        stock_data_json = stock_data.to_json(orient='records')
+        return jsonify(stock_data_json)
+
+@app.route('/multiData', methods = ['GET'])
+def multiStocks():
+    stocks_data = helpers.fetch_multiple_stock_data(
+        request.args.get('stocksNames'),
+        request.args.get('fromDate'),
+        request.args.get('toDate')
+    )
+
+    json_data_list = []
+    for key in stocks_data:
+        json_data = stocks_data[key].reset_index().to_json(orient='records')
+        json_data_list.append(json_data)
+    print(jsonify(json_data_list))
+    return jsonify(json_data_list)
 
 if __name__ == '__main__':
     app.run(debug=True)
