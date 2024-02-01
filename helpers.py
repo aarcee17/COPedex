@@ -4,6 +4,9 @@ import pandas_ta as ta
 from plotly.subplots import make_subplots
 import requests
 from bs4 import BeautifulSoup
+from datetime import datetime, time
+import pytz
+
 
 def get_stock_dataN(symbol):
     url = f"https://www.google.com/finance/quote/{symbol}:INDEXNSE"
@@ -221,3 +224,122 @@ def plot_multiple_stocks(symbol_data, selected_filters):
     else:
         print("No data available for the given stock symbols.")
 # print(fetch_multiple_stock_data('SBIN CIPLA', '2023-07-22', '2024-01-26'))
+        
+        
+def get_financial_data(symbol):
+    try:
+        ticker = yf.Ticker(symbol)
+
+        # Get info
+        info = ticker.info
+
+        # List of parameters to extract
+        parameters_to_extract = [
+            'sector', 'longName', 'website', 'marketCap', 'fiftyTwoWeekHigh', 'fiftyTwoWeekLow', 'trailingPE',
+            'forwardPE', 'ebitda', 'priceToBook', 'bookValue', 'debtToEquity', 'trailingEps', 'forwardEps',
+            'dividendYield', 'dividendRate', 'payoutRatio', 'profitMargins', 'operatingMargins', 'returnOnEquity',
+            'returnOnAssets', 'grossMargins', 'currentRatio', 'quickRatio', 'inventoryTurnover', 'revenuePerShare',
+            'altmanZScore', 'interestCoverage', 'beta', 'enterpriseValue', 'enterpriseToEbitda', 'enterpriseToEbit',
+            'priceToSalesTrailing12Months', 'freeCashflow', 'workingCapital'
+        ]
+
+        # Extract relevant financial data
+        financial_data = {param: info.get(param, 'N/A') for param in parameters_to_extract}
+
+        # Filter out 'N/A' values
+        financial_data = {k: v for k, v in financial_data.items() if v != 'N/A'}
+
+        return financial_data
+
+    except Exception as e:
+        print(f"Error fetching financial data for {symbol}: {e}")
+        return None
+
+# Example usage:
+#symbol = 'SBIN.NS'
+#financial_data = get_financial_data(symbol)
+
+#if financial_data:
+ #   for key, value in financial_data.items():
+  #      print(f"{key}: {value}")        
+  
+  
+def check_market_status():
+    # Get current date and time in UTC
+    now_utc = datetime.utcnow()
+
+    # Convert UTC time to Indian Standard Time (IST)
+    ist = pytz.timezone('Asia/Kolkata')
+    now_ist = now_utc.astimezone(ist)
+
+    # Define market opening and closing times in IST
+    market_open_time = time(9, 30)
+    market_close_time = time(15, 0)
+
+    # Check if it's a weekday and within market hours
+    if now_ist.weekday() < 5 and market_open_time <= now_ist.time() <= market_close_time:
+        return 'green', now_ist.time()
+    else:
+        return 'red', now_ist.time()  
+    
+    
+def get_financial_data(symbol):
+    try:
+        ticker = yf.Ticker(symbol)
+
+        # Get info
+        info = ticker.info
+
+        # List of parameters to extract
+        parameters_to_extract = [
+            'sector', 'longName', 'website', 'marketCap', 'fiftyTwoWeekHigh', 'fiftyTwoWeekLow', 'trailingPE',
+            'forwardPE', 'ebitda', 'priceToBook', 'bookValue', 'debtToEquity', 'trailingEps', 'forwardEps',
+            'dividendYield', 'dividendRate', 'payoutRatio', 'profitMargins', 'operatingMargins', 'returnOnEquity',
+            'returnOnAssets', 'grossMargins', 'currentRatio', 'quickRatio', 'inventoryTurnover', 'revenuePerShare',
+            'altmanZScore', 'interestCoverage', 'beta', 'enterpriseValue', 'enterpriseToEbitda', 'enterpriseToEbit',
+            'priceToSalesTrailing12Months', 'freeCashflow', 'workingCapital'
+        ]
+
+        # Extract relevant financial data
+        financial_data = {param: info.get(param, 'N/A') for param in parameters_to_extract}
+
+        # Filter out 'N/A' values
+        financial_data = {k: v for k, v in financial_data.items() if v != 'N/A'}
+
+        return financial_data
+
+    except Exception as e:
+        print(f"Error fetching financial data for {symbol}: {e}")
+        return None
+
+def get_nifty50cov(filter_choice, range_start, range_end):
+    nifty50cov = {}
+    df = pd.read_csv('nifty50.csv')
+    nifty50_symbols = df['Symbol']
+    for symbol in nifty50_symbols:
+
+        financial_data = get_financial_data(symbol+'.NS')
+
+        if financial_data:
+            try:
+              
+                if filter_choice in financial_data and range_start <= financial_data[filter_choice] <= range_end:
+                    
+                    nifty50cov[symbol] = financial_data
+
+            except Exception as e:
+                print(f"Error processing filter for {symbol.ticker}: {e}")
+
+    return nifty50cov
+
+#filter_choice = input("Enter the filter you want to use (e.g., bookValue, payoutRatio, etc.): ")
+#range_start = float(input("Enter the start of the range: "))
+#range_end = float(input("Enter the end of the range: "))
+
+#nifty50cov_data = get_nifty50cov(filter_choice, range_start, range_end)
+
+#for symbol, financial_data in nifty50cov_data.items():
+    #print(f"\nSymbol: {symbol}")
+    #for key, value in financial_data.items():
+     #   print(f"{key}: {value}") 
+        
